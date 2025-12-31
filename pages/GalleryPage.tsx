@@ -10,6 +10,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
   const { gallery, galleryMetadata } = content;
   const [view, setView] = useState<'albums' | 'photos'>('albums');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   // Grouping categories and counts
   const categories = Array.from(new Set(gallery.map(item => item.category)));
@@ -27,6 +28,28 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
     <div className="min-h-screen bg-slate-50 py-16">
       <div className="container mx-auto px-4">
         
+        {/* Fullscreen Image Viewer (No Animation) */}
+        {fullscreenImage && (
+          <div 
+            className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4 cursor-zoom-out"
+            onClick={() => setFullscreenImage(null)}
+          >
+            <div className="relative max-w-full max-h-full">
+              <img 
+                src={fullscreenImage} 
+                className="max-w-full max-h-[90vh] object-contain block mx-auto shadow-2xl" 
+                alt="Fullscreen view"
+              />
+              <button 
+                onClick={(e) => { e.stopPropagation(); setFullscreenImage(null); }}
+                className="absolute -top-12 right-0 text-white text-4xl hover:text-emerald-500 transition-colors"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Header Section */}
         <div className="text-center mb-16">
           <span className="text-emerald-600 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">
@@ -108,6 +131,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
             {filteredPhotos.map(item => (
               <div 
                 key={item.id} 
+                onClick={() => setFullscreenImage(item.url)}
                 className="relative group overflow-hidden rounded-[2rem] border border-slate-100 shadow-sm cursor-zoom-in hover:shadow-2xl transition-all duration-500 break-inside-avoid"
               >
                 <img 
