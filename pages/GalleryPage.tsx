@@ -1,74 +1,138 @@
 
 import React, { useState } from 'react';
-import { GalleryItem } from '../types.ts';
+import { AppState, GalleryItem } from '../types.ts';
 
 interface GalleryPageProps {
-  gallery: GalleryItem[];
+  content: AppState;
 }
 
-const GalleryPage: React.FC<GalleryPageProps> = ({ gallery }) => {
-  const [activeCategory, setActiveCategory] = useState('All');
+const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
+  const { gallery, galleryMetadata } = content;
+  const [view, setView] = useState<'albums' | 'photos'>('albums');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Grouping categories and counts
+  const categories = Array.from(new Set(gallery.map(item => item.category)));
   
-  const categories = ['All', ...new Set(gallery.map(item => item.category))];
-  
-  const filtered = activeCategory === 'All' 
-    ? gallery 
-    : gallery.filter(item => item.category === activeCategory);
+  const handleAlbumClick = (category: string) => {
+    setSelectedCategory(category);
+    setView('photos');
+  };
+
+  const filteredPhotos = selectedCategory 
+    ? gallery.filter(item => item.category === selectedCategory)
+    : [];
 
   return (
-    <div className="min-h-screen bg-white py-16">
+    <div className="min-h-screen bg-slate-50 py-16">
       <div className="container mx-auto px-4">
+        
+        {/* Header Section */}
         <div className="text-center mb-16">
-          <span className="text-emerald-600 font-bold uppercase tracking-[0.3em] text-xs mb-4 block">Visual Tour</span>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">Campus Life & Events</h1>
-          <p className="text-slate-500 max-w-2xl mx-auto mb-12 text-lg">
-            Experience the vibrant culture and modern facilities that define our institute.
-          </p>
+          <span className="text-emerald-600 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">
+            {view === 'albums' ? 'Visual Archives' : selectedCategory}
+          </span>
+          <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
+            {view === 'albums' ? 'Our Campus Life' : 'Album Collection'}
+          </h1>
+          {view === 'albums' && (
+            <p className="text-slate-500 max-w-2xl mx-auto text-lg font-medium leading-relaxed">
+              Explore our institute through dedicated albums showcasing classrooms, 
+              projects, and student achievements.
+            </p>
+          )}
           
-          <div className="flex flex-wrap justify-center gap-3">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
-                  activeCategory === cat 
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-xl shadow-emerald-600/20' 
-                    : 'bg-white text-slate-400 border-slate-100 hover:border-emerald-200 hover:text-emerald-600'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8">
-          {filtered.map(item => (
-            <div 
-              key={item.id} 
-              className="relative group overflow-hidden rounded-[2rem] border border-slate-100 shadow-sm cursor-pointer hover:shadow-2xl transition-all duration-500 break-inside-avoid"
+          {view === 'photos' && (
+            <button 
+              onClick={() => setView('albums')}
+              className="mt-4 inline-flex items-center gap-3 px-8 py-3 bg-white text-slate-900 border border-slate-200 rounded-full font-black text-xs uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all shadow-xl active:scale-95"
             >
-              <img 
-                src={item.url} 
-                alt={item.title} 
-                className="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
-              />
-              {/* Instagram-style Caption Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0">
-                <span className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2">{item.category}</span>
-                <h3 className="text-white font-bold text-xl leading-tight mb-2">{item.title}</h3>
-                <div className="w-12 h-1 bg-emerald-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-              </div>
-            </div>
-          ))}
+              <i className="fa-solid fa-arrow-left-long"></i> Back to Albums
+            </button>
+          )}
         </div>
 
-        {filtered.length === 0 && (
-          <div className="text-center py-40 bg-slate-50 rounded-[3rem] border border-dashed border-slate-200">
-            <i className="fa-regular fa-face-smile text-4xl text-slate-300 mb-4 block"></i>
-            <p className="text-slate-400 font-medium italic">We're still gathering memories for this category...</p>
+        {/* ALBUM GRID VIEW */}
+        {view === 'albums' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {categories.map(cat => {
+              const thumbnail = galleryMetadata?.[cat];
+              const count = gallery.filter(i => i.category === cat).length;
+              
+              return (
+                <div 
+                  key={cat}
+                  onClick={() => handleAlbumClick(cat)}
+                  className="group relative h-[400px] rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl transition-all duration-700 hover:-translate-y-2"
+                >
+                  {/* Background Thumbnail */}
+                  <img 
+                    src={thumbnail || 'https://images.unsplash.com/photo-1523050853063-bd8012fec046'} 
+                    alt={cat}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-95 transition-opacity"></div>
+                  
+                  {/* Content */}
+                  <div className="absolute inset-0 p-10 flex flex-col justify-end">
+                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      <span className="inline-block px-4 py-1.5 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-4 shadow-lg">
+                        {count} Photos
+                      </span>
+                      <h3 className="text-3xl font-black text-white mb-2 leading-tight">
+                        {cat}
+                      </h3>
+                      <p className="text-slate-300 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                        Explore this collection <i className="fa-solid fa-arrow-right-long ml-2"></i>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {categories.length === 0 && (
+              <div className="col-span-full py-32 text-center bg-white rounded-[3rem] border-4 border-dashed border-slate-100">
+                <i className="fa-solid fa-images text-5xl text-slate-200 mb-6 block"></i>
+                <p className="text-slate-400 font-bold uppercase tracking-widest">No albums created yet.</p>
+              </div>
+            )}
           </div>
         )}
+
+        {/* PHOTO DETAIL VIEW */}
+        {view === 'photos' && (
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-8 animate-fade-in">
+            {filteredPhotos.map(item => (
+              <div 
+                key={item.id} 
+                className="relative group overflow-hidden rounded-[2rem] border border-slate-100 shadow-sm cursor-zoom-in hover:shadow-2xl transition-all duration-500 break-inside-avoid"
+              >
+                <img 
+                  src={item.url} 
+                  alt={item.title} 
+                  className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
+                />
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0">
+                  <h3 className="text-white font-black text-xl leading-tight mb-2">
+                    {item.title}
+                  </h3>
+                  <div className="w-12 h-1 bg-emerald-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                </div>
+              </div>
+            ))}
+            
+            {filteredPhotos.length === 0 && (
+              <div className="col-span-full text-center py-32">
+                <p className="text-slate-400 font-bold">This album is currently empty.</p>
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
   );

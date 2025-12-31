@@ -40,7 +40,7 @@ const App: React.FC = () => {
             <Route path="/about" element={<AboutPage content={content.about} siteName={content.site.name} />} />
             <Route path="/courses" element={<CoursesPage courses={content.courses} />} />
             <Route path="/notices" element={<NoticesPage notices={content.notices} />} />
-            <Route path="/gallery" element={<GalleryPage gallery={content.gallery} />} />
+            <Route path="/gallery" element={<GalleryPage content={content} />} />
             <Route path="/contact" element={<ContactPage config={content.site.contact} />} />
             <Route path="/admin" element={<AdminDashboard content={content} onUpdate={updateContent} />} />
           </Routes>
