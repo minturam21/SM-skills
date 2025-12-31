@@ -21,7 +21,23 @@ import EnrollmentPage from './pages/EnrollmentPage.tsx';
 const App: React.FC = () => {
   const [content, setContent] = useState<AppState>(() => {
     const saved = localStorage.getItem('edu_insta_content');
-    return saved ? JSON.parse(saved) : INITIAL_CONTENT;
+    if (!saved) return INITIAL_CONTENT;
+    
+    try {
+      const parsed = JSON.parse(saved);
+      // Merge INITIAL_CONTENT with saved to ensure new keys like 'enrollmentForm' exist
+      return {
+        ...INITIAL_CONTENT,
+        ...parsed,
+        // Deeply merge specific objects if necessary, or just ensure keys exist
+        site: { ...INITIAL_CONTENT.site, ...parsed.site },
+        home: { ...INITIAL_CONTENT.home, ...parsed.home },
+        enrollmentForm: parsed.enrollmentForm || INITIAL_CONTENT.enrollmentForm,
+        about: { ...INITIAL_CONTENT.about, ...parsed.about }
+      };
+    } catch (e) {
+      return INITIAL_CONTENT;
+    }
   });
 
   const updateContent = (newContent: AppState) => {

@@ -12,9 +12,12 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
 
-  const { enrollmentForm, courses, site } = content;
+  // Defensive fallback for enrollmentForm
+  const { enrollmentForm = { title: 'Application Form', description: '', fields: [] }, courses = [], site } = content;
 
   useEffect(() => {
+    if (!enrollmentForm?.fields) return;
+
     // Initialize form data state with empty values for each field
     const initialData: Record<string, string> = {};
     enrollmentForm.fields.forEach(field => {
@@ -117,64 +120,73 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
               <div className="flex-grow p-12 md:p-16">
                 <form onSubmit={handleSubmit} className="space-y-8">
                   
-                  {enrollmentForm.fields.map(field => (
-                    <div key={field.id} className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
-                        {field.label} {field.required && <span className="text-red-500">*</span>}
-                      </label>
-                      
-                      {field.type === 'textarea' ? (
-                        <textarea 
-                          required={field.required}
-                          value={formData[field.id] || ''}
-                          onChange={(e) => handleChange(field.id, e.target.value)}
-                          rows={4}
-                          placeholder={field.placeholder}
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all resize-none font-medium"
-                        />
-                      ) : field.type === 'course-select' ? (
-                        <select 
-                          required={field.required}
-                          value={formData[field.id] || ''}
-                          onChange={(e) => handleChange(field.id, e.target.value)}
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all font-bold text-slate-700"
-                        >
-                          <option value="">{field.placeholder || 'Select a Program'}</option>
-                          {courses.filter(c => c.status === 'Active').map(course => (
-                            <option key={course.id} value={course.name}>{course.name}</option>
-                          ))}
-                        </select>
-                      ) : field.type === 'select' ? (
-                        <select 
-                          required={field.required}
-                          value={formData[field.id] || ''}
-                          onChange={(e) => handleChange(field.id, e.target.value)}
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all font-bold text-slate-700"
-                        >
-                          <option value="">{field.placeholder}</option>
-                          {field.options?.map(opt => (
-                            <option key={opt} value={opt}>{opt}</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input 
-                          required={field.required}
-                          type={field.type}
-                          value={formData[field.id] || ''}
-                          onChange={(e) => handleChange(field.id, e.target.value)}
-                          placeholder={field.placeholder}
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all font-medium"
-                        />
-                      )}
+                  {enrollmentForm.fields && enrollmentForm.fields.length > 0 ? (
+                    enrollmentForm.fields.map(field => (
+                      <div key={field.id} className="space-y-2">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">
+                          {field.label} {field.required && <span className="text-red-500">*</span>}
+                        </label>
+                        
+                        {field.type === 'textarea' ? (
+                          <textarea 
+                            required={field.required}
+                            value={formData[field.id] || ''}
+                            onChange={(e) => handleChange(field.id, e.target.value)}
+                            rows={4}
+                            placeholder={field.placeholder}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all resize-none font-medium"
+                          />
+                        ) : field.type === 'course-select' ? (
+                          <select 
+                            required={field.required}
+                            value={formData[field.id] || ''}
+                            onChange={(e) => handleChange(field.id, e.target.value)}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all font-bold text-slate-700"
+                          >
+                            <option value="">{field.placeholder || 'Select a Program'}</option>
+                            {courses.filter(c => c.status === 'Active').map(course => (
+                              <option key={course.id} value={course.name}>{course.name}</option>
+                            ))}
+                          </select>
+                        ) : field.type === 'select' ? (
+                          <select 
+                            required={field.required}
+                            value={formData[field.id] || ''}
+                            onChange={(e) => handleChange(field.id, e.target.value)}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all font-bold text-slate-700"
+                          >
+                            <option value="">{field.placeholder}</option>
+                            {field.options?.map(opt => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input 
+                            required={field.required}
+                            type={field.type}
+                            value={formData[field.id] || ''}
+                            onChange={(e) => handleChange(field.id, e.target.value)}
+                            placeholder={field.placeholder}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all font-medium"
+                          />
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-10 text-center text-slate-400 text-sm">
+                      <i className="fa-solid fa-triangle-exclamation mb-2 block text-xl"></i>
+                      The enrollment form configuration is missing. Please contact administration.
                     </div>
-                  ))}
+                  )}
 
-                  <button 
-                    type="submit"
-                    className="w-full py-6 bg-emerald-600 text-white font-black text-lg rounded-[2rem] hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-[0.98] uppercase tracking-widest"
-                  >
-                    Submit Application <i className="fa-solid fa-paper-plane ml-3"></i>
-                  </button>
+                  {enrollmentForm.fields && enrollmentForm.fields.length > 0 && (
+                    <button 
+                      type="submit"
+                      className="w-full py-6 bg-emerald-600 text-white font-black text-lg rounded-[2rem] hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 active:scale-[0.98] uppercase tracking-widest"
+                    >
+                      Submit Application <i className="fa-solid fa-paper-plane ml-3"></i>
+                    </button>
+                  )}
 
                   <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                     By submitting, you agree to our privacy policy and terms of service.
