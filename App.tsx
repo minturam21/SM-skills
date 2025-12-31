@@ -58,7 +58,7 @@ const App: React.FC = () => {
             <Route path="/courses" element={<CoursesPage courses={content.courses} />} />
             <Route path="/notices" element={<NoticesPage notices={content.notices} />} />
             <Route path="/gallery" element={<GalleryPage content={content} />} />
-            <Route path="/contact" element={<ContactPage config={content.site.contact} />} />
+            <Route path="/contact" element={<ContactPage config={content.site.contact} social={content.site.social} />} />
             <Route path="/admin" element={<AdminDashboard content={content} onUpdate={updateContent} />} />
             <Route path="/enroll" element={<EnrollmentPage content={content} />} />
           </Routes>

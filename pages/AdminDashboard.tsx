@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { AppState, Course, Notice, GalleryItem, FormField } from '../types.ts';
+import { AppState, Course, Notice, GalleryItem, FormField, SocialLink } from '../types.ts';
 
 interface AdminDashboardProps {
   content: AppState;
@@ -165,15 +165,38 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
     }));
   };
 
-  const updateSocialField = (field: string, value: any) => {
+  const addSocialLink = () => {
+    const newLink: SocialLink = {
+      id: Date.now().toString(),
+      platform: 'New Platform',
+      url: 'https://',
+      icon: 'fa-share-nodes'
+    };
     setLocalContent(prev => ({
       ...prev,
       site: {
         ...prev.site,
-        social: {
-          ...prev.site.social,
-          [field]: value
-        }
+        social: [...prev.site.social, newLink]
+      }
+    }));
+  };
+
+  const updateSocialLink = (id: string, field: keyof SocialLink, value: string) => {
+    setLocalContent(prev => ({
+      ...prev,
+      site: {
+        ...prev.site,
+        social: prev.site.social.map(s => s.id === id ? { ...s, [field]: value } : s)
+      }
+    }));
+  };
+
+  const removeSocialLink = (id: string) => {
+    setLocalContent(prev => ({
+      ...prev,
+      site: {
+        ...prev.site,
+        social: prev.site.social.filter(s => s.id !== id)
       }
     }));
   };
@@ -454,22 +477,75 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
                         <input value={localContent.site.contact.email} onChange={e => updateContactField('email', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 font-medium" />
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
-                  <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3">
-                    <i className="fa-solid fa-map-location-dot"></i> MAPS & SOCIAL
-                  </h3>
-                  <div className="space-y-6">
                     <div className="space-y-2">
                       <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Google Maps Embed URL</label>
                       <input value={localContent.site.contact.mapUrl} onChange={e => updateContactField('mapUrl', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs text-emerald-400 font-mono" placeholder="Paste iframe src..." />
                     </div>
-                    <div className="grid grid-cols-1 gap-4">
-                      <input value={localContent.site.social.facebook} onChange={e => updateSocialField('facebook', e.target.value)} className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-200" placeholder="Facebook Profile Link" />
-                      <input value={localContent.site.social.linkedin} onChange={e => updateSocialField('linkedin', e.target.value)} className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-200" placeholder="LinkedIn Profile Link" />
-                      <input value={localContent.site.social.twitter} onChange={e => updateSocialField('twitter', e.target.value)} className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-200" placeholder="Twitter/X Profile Link" />
-                    </div>
+                  </div>
+                </div>
+
+                {/* DYNAMIC SOCIAL MEDIA MANAGEMENT */}
+                <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3">
+                      <i className="fa-solid fa-share-nodes"></i> SOCIAL MEDIA
+                    </h3>
+                    <button 
+                      onClick={addSocialLink} 
+                      className="px-4 py-1.5 bg-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg active:scale-95"
+                    >
+                      ADD SOCIAL
+                    </button>
+                  </div>
+                  <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                    {localContent.site.social.map((social) => (
+                      <div key={social.id} className="bg-slate-800 p-5 rounded-2xl border border-slate-700 relative group">
+                        <button 
+                          onClick={() => removeSocialLink(social.id)}
+                          className="absolute -top-2 -right-2 w-8 h-8 bg-red-600 text-white rounded-lg flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                        >
+                          <i className="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div className="space-y-1">
+                            <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">Platform Label</label>
+                            <input 
+                              value={social.platform} 
+                              onChange={e => updateSocialLink(social.id, 'platform', e.target.value)} 
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" 
+                              placeholder="e.g. Instagram"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">FA Icon Class</label>
+                            <input 
+                              value={social.icon} 
+                              onChange={e => updateSocialLink(social.id, 'icon', e.target.value)} 
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-emerald-500 font-mono" 
+                              placeholder="fa-instagram"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">Direct URL</label>
+                          <input 
+                            value={social.url} 
+                            onChange={e => updateSocialLink(social.id, 'url', e.target.value)} 
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300" 
+                            placeholder="https://..."
+                          />
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-700 flex items-center gap-3">
+                           <span className="text-[9px] font-bold text-slate-500 uppercase">Preview:</span>
+                           <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-emerald-500 border border-slate-700">
+                             <i className={`fa-brands ${social.icon}`}></i>
+                           </div>
+                        </div>
+                      </div>
+                    ))}
+                    {localContent.site.social.length === 0 && (
+                      <div className="text-center py-10 opacity-30 italic text-sm">No social links added yet.</div>
+                    )}
                   </div>
                 </div>
               </div>

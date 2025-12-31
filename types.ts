@@ -1,4 +1,11 @@
 
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon: string;
+}
+
 export interface SiteConfig {
   name: string;
   tagline: string;
@@ -9,11 +16,7 @@ export interface SiteConfig {
     address: string;
     mapUrl: string;
   };
-  social: {
-    facebook?: string;
-    twitter?: string;
-    linkedin?: string;
-  };
+  social: SocialLink[];
   navigation: Array<{ label: string; path: string; }>;
   footer: {
     brandDescription: string;

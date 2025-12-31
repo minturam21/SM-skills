@@ -17,22 +17,19 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               {config.footer.brandDescription}
             </p>
-            <div className="flex space-x-4">
-              {config.social.facebook && (
-                <a href={config.social.facebook} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all">
-                  <i className="fa-brands fa-facebook-f"></i>
+            <div className="flex flex-wrap gap-4">
+              {config.social.map(social => (
+                <a 
+                  key={social.id}
+                  href={social.url} 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-md"
+                  title={social.platform}
+                >
+                  <i className={`fa-brands ${social.icon}`}></i>
                 </a>
-              )}
-              {config.social.twitter && (
-                <a href={config.social.twitter} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all">
-                  <i className="fa-brands fa-twitter"></i>
-                </a>
-              )}
-              {config.social.linkedin && (
-                <a href={config.social.linkedin} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-700 hover:text-white transition-all">
-                  <i className="fa-brands fa-linkedin-in"></i>
-                </a>
-              )}
+              ))}
             </div>
           </div>
 

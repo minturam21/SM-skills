@@ -1,21 +1,17 @@
 
 import React, { useState } from 'react';
+import { SiteConfig } from '../types';
 
 interface ContactPageProps {
-  config: {
-    email: string;
-    phone: string;
-    address: string;
-    mapUrl: string;
-  };
+  config: SiteConfig['contact'];
+  social?: SiteConfig['social'];
 }
 
-const ContactPage: React.FC<ContactPageProps> = ({ config }) => {
+const ContactPage: React.FC<ContactPageProps> = ({ config, social = [] }) => {
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send to an API
     setSubmitted(true);
   };
 
@@ -64,6 +60,27 @@ const ContactPage: React.FC<ContactPageProps> = ({ config }) => {
               </div>
             </div>
 
+            {/* Social Media Links Section */}
+            {social && social.length > 0 && (
+              <div className="mb-12">
+                <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Social Connect</h4>
+                <div className="flex flex-wrap gap-4">
+                  {social.map(item => (
+                    <a 
+                      key={item.id}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 px-6 py-3 bg-white border border-slate-200 rounded-2xl hover:border-emerald-500 hover:text-emerald-600 transition-all shadow-sm group"
+                    >
+                      <i className={`fa-brands ${item.icon} text-lg group-hover:scale-110 transition-transform`}></i>
+                      <span className="font-bold text-sm">{item.platform}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="rounded-3xl overflow-hidden shadow-2xl h-80 border-4 border-white">
               <iframe 
                 src={config.mapUrl} 
@@ -78,7 +95,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ config }) => {
           </div>
 
           {/* Form Side */}
-          <div className="bg-white p-8 md:p-12 rounded-[2rem] shadow-xl border border-slate-100">
+          <div className="bg-white p-8 md:p-12 rounded-[2rem] shadow-xl border border-slate-100 h-fit sticky top-24">
             {submitted ? (
               <div className="text-center py-20">
                 <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">

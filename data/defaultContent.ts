@@ -12,11 +12,11 @@ export const INITIAL_CONTENT: AppState = {
       address: "123 Academic Way, Education District, City, Country",
       mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.835434509374!2d144.9537353153166!3d-37.81627977975171!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f11fd81%3A0x5045675218ce6e0!2zTWVsYm91cm5lIFZJQywgQXVzdHJhbGlh!5e0!3m2!1sen!2sus!4v1634567890123"
     },
-    social: {
-      facebook: "https://facebook.com",
-      twitter: "https://twitter.com",
-      linkedin: "https://linkedin.com"
-    },
+    social: [
+      { id: 's1', platform: 'Facebook', url: 'https://facebook.com', icon: 'fa-facebook-f' },
+      { id: 's2', platform: 'Twitter', url: 'https://twitter.com', icon: 'fa-twitter' },
+      { id: 's3', platform: 'LinkedIn', url: 'https://linkedin.com', icon: 'fa-linkedin-in' }
+    ],
     navigation: [
       { label: "Home", path: "#/" },
       { label: "About", path: "#/about" },
