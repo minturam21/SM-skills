@@ -12,11 +12,11 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
 
   const getNoticeTheme = (category?: string) => {
     switch(category) {
-      case 'Urgent': return { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-100', icon: 'fa-fire-flame-curved' };
-      case 'Event': return { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-100', icon: 'fa-calendar-star' };
-      case 'Holiday': return { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-100', icon: 'fa-umbrella-beach' };
-      case 'New': return { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-100', icon: 'fa-sparkles' };
-      default: return { bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200', icon: 'fa-bullhorn' };
+      case 'Urgent': return { bg: 'bg-red-600', text: 'text-white', lightBg: 'bg-red-50', lightText: 'text-red-600', border: 'border-red-100', icon: 'fa-fire-flame-curved' };
+      case 'New': return { bg: 'bg-green-500', text: 'text-white', lightBg: 'bg-green-50', lightText: 'text-green-600', border: 'border-green-100', icon: 'fa-sparkles' };
+      case 'Event': return { bg: 'bg-blue-600', text: 'text-white', lightBg: 'bg-blue-50', lightText: 'text-blue-600', border: 'border-blue-100', icon: 'fa-calendar-star' };
+      case 'Holiday': return { bg: 'bg-amber-500', text: 'text-white', lightBg: 'bg-amber-50', lightText: 'text-amber-600', border: 'border-amber-100', icon: 'fa-umbrella-beach' };
+      default: return { bg: 'bg-slate-600', text: 'text-white', lightBg: 'bg-slate-50', lightText: 'text-slate-600', border: 'border-slate-200', icon: 'fa-bullhorn' };
     }
   };
 
@@ -117,7 +117,7 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
                        <i className={`fa-solid ${getNoticeTheme(spotlightNotice.category).icon} text-9xl text-white`}></i>
                     </div>
                     <div>
-                      <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 ${getNoticeTheme(spotlightNotice.category).bg} ${getNoticeTheme(spotlightNotice.category).text} text-[10px] font-black uppercase tracking-widest`}>
+                      <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 ${getNoticeTheme(spotlightNotice.category).bg} ${getNoticeTheme(spotlightNotice.category).text} text-[10px] font-black uppercase tracking-widest shadow-lg`}>
                         <i className={`fa-solid ${getNoticeTheme(spotlightNotice.category).icon}`}></i>
                         {spotlightNotice.category || 'Announcement'}
                       </div>
@@ -169,13 +169,13 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
                             key={`${notice.id}-${idx}`} 
                             className="bg-slate-800/40 border border-white/5 rounded-3xl p-6 flex gap-6 hover:bg-slate-700/60 transition-all group cursor-pointer hover:border-emerald-500/30 shrink-0"
                           >
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme.bg} ${theme.text} text-xl shadow-inner group-hover:scale-110 transition-transform`}>
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme.lightBg} ${theme.lightText} text-xl shadow-inner group-hover:scale-110 transition-transform`}>
                               <i className={`fa-solid ${theme.icon}`}></i>
                             </div>
                             <div className="flex flex-col justify-center overflow-hidden">
                               <div className="flex items-center gap-3 mb-1">
                                 <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{new Date(notice.date).toLocaleDateString()}</span>
-                                <span className={`text-[8px] font-black uppercase tracking-tighter px-2 py-0.5 rounded ${theme.bg} ${theme.text}`}>
+                                <span className={`text-[8px] font-black uppercase tracking-tighter px-2 py-0.5 rounded shadow-sm ${theme.bg} ${theme.text}`}>
                                   {notice.category}
                                 </span>
                               </div>

@@ -15,7 +15,7 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
           <div className="col-span-1 md:col-span-1">
             <h3 className="text-white text-xl font-bold mb-4">{config.name}</h3>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
-              Empowering professional education for over a decade. Built on quality and results.
+              {config.footer.brandDescription}
             </p>
             <div className="flex space-x-4">
               {config.social.facebook && (
@@ -38,7 +38,7 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-6">Quick Links</h4>
+            <h4 className="text-white font-semibold mb-6">{config.footer.quickLinksLabel}</h4>
             <ul className="space-y-4 text-sm">
               {config.navigation.map(nav => (
                 <li key={nav.label}>
@@ -50,18 +50,19 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
 
           {/* Support */}
           <div>
-            <h4 className="text-white font-semibold mb-6">Support</h4>
+            <h4 className="text-white font-semibold mb-6">{config.footer.supportLinksLabel}</h4>
             <ul className="space-y-4 text-sm">
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Career Guidance</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Affiliate Program</a></li>
+              {config.footer.supportLinks.map((link, idx) => (
+                <li key={idx}>
+                  <a href={link.path} className="hover:text-white transition-colors">{link.label}</a>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-white font-semibold mb-6">Reach Us</h4>
+            <h4 className="text-white font-semibold mb-6">{config.footer.reachUsLabel}</h4>
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
                 <i className="fa-solid fa-location-dot mt-1 text-emerald-500"></i>
@@ -79,9 +80,9 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
           </div>
         </div>
 
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:row items-center justify-between text-xs font-medium text-slate-500 uppercase tracking-widest">
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between text-xs font-medium text-slate-500 uppercase tracking-widest">
           <p>© {new Date().getFullYear()} {config.name}. All rights reserved.</p>
-          <p className="mt-4 md:mt-0">Design & Architecture by Senior Architect</p>
+          <p className="mt-4 md:mt-0">{config.footer.bottomText}</p>
         </div>
       </div>
     </footer>

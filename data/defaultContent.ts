@@ -24,7 +24,20 @@ export const INITIAL_CONTENT: AppState = {
       { label: "Notices", path: "#/notices" },
       { label: "Gallery", path: "#/gallery" },
       { label: "Contact", path: "#/contact" }
-    ]
+    ],
+    footer: {
+      brandDescription: "Empowering professional education for over a decade. Built on quality and results.",
+      quickLinksLabel: "Quick Links",
+      supportLinksLabel: "Support",
+      reachUsLabel: "Reach Us",
+      bottomText: "Design & Architecture by Senior Architect",
+      supportLinks: [
+        { label: "Privacy Policy", path: "#" },
+        { label: "Terms of Service", path: "#" },
+        { label: "Career Guidance", path: "#" },
+        { label: "Affiliate Program", path: "#" }
+      ]
+    }
   },
   home: {
     hero: {
@@ -125,6 +138,7 @@ export const INITIAL_CONTENT: AppState = {
       title: "Summer Admissions Open",
       description: "Enroll now to get a 20% early bird discount on all technical courses.",
       isImportant: true,
+      category: 'New',
       link: "#/courses"
     },
     {
@@ -132,6 +146,7 @@ export const INITIAL_CONTENT: AppState = {
       date: "2024-05-15",
       title: "Upcoming Career Fair",
       description: "Join us on June 10th for the annual career fair featuring top tech companies.",
+      category: 'Urgent',
       isImportant: false
     }
   ],

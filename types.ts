@@ -15,6 +15,14 @@ export interface SiteConfig {
     linkedin?: string;
   };
   navigation: Array<{ label: string; path: string; }>;
+  footer: {
+    brandDescription: string;
+    quickLinksLabel: string;
+    supportLinksLabel: string;
+    supportLinks: Array<{ label: string; path: string; }>;
+    reachUsLabel: string;
+    bottomText: string;
+  };
 }
 
 export interface HomeConfig {
