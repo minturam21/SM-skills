@@ -10,7 +10,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
   const { gallery, galleryMetadata } = content;
   const [view, setView] = useState<'albums' | 'photos'>('albums');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  const [fullscreenItem, setFullscreenItem] = useState<GalleryItem | null>(null);
 
   // Grouping categories and counts
   const categories = Array.from(new Set(gallery.map(item => item.category)));
@@ -29,19 +29,28 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
       <div className="container mx-auto px-4">
         
         {/* Fullscreen Image Viewer (No Animation) */}
-        {fullscreenImage && (
+        {fullscreenItem && (
           <div 
-            className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4 cursor-zoom-out"
-            onClick={() => setFullscreenImage(null)}
+            className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center p-4 cursor-zoom-out"
+            onClick={() => setFullscreenItem(null)}
           >
-            <div className="relative max-w-full max-h-full">
+            <div className="relative max-w-full max-h-full flex flex-col items-center">
               <img 
-                src={fullscreenImage} 
-                className="max-w-full max-h-[90vh] object-contain block mx-auto shadow-2xl" 
-                alt="Fullscreen view"
+                src={fullscreenItem.url} 
+                className="max-w-full max-h-[85vh] object-contain block mx-auto shadow-2xl" 
+                alt={fullscreenItem.title || "Fullscreen view"}
               />
+              
+              {fullscreenItem.title && (
+                <div className="mt-4 px-6 py-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 text-center max-w-2xl">
+                  <p className="text-white font-medium text-lg leading-relaxed">
+                    {fullscreenItem.title}
+                  </p>
+                </div>
+              )}
+
               <button 
-                onClick={(e) => { e.stopPropagation(); setFullscreenImage(null); }}
+                onClick={(e) => { e.stopPropagation(); setFullscreenItem(null); }}
                 className="absolute -top-12 right-0 text-white text-4xl hover:text-emerald-500 transition-colors"
               >
                 <i className="fa-solid fa-xmark"></i>
@@ -131,7 +140,7 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
             {filteredPhotos.map(item => (
               <div 
                 key={item.id} 
-                onClick={() => setFullscreenImage(item.url)}
+                onClick={() => setFullscreenItem(item)}
                 className="relative group overflow-hidden rounded-[2rem] border border-slate-100 shadow-sm cursor-zoom-in hover:shadow-2xl transition-all duration-500 break-inside-avoid"
               >
                 <img 
@@ -140,11 +149,16 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
                   className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out"
                 />
                 
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-white font-black text-xl leading-tight mb-2">
-                    {item.title}
-                  </h3>
-                  <div className="w-12 h-1 bg-emerald-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                {/* Caption Overlay - Only shows if item.title is present */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 ${!item.title ? 'pointer-events-none' : ''}`}>
+                  {item.title && (
+                    <>
+                      <h3 className="text-white font-black text-xl leading-tight mb-2">
+                        {item.title}
+                      </h3>
+                      <div className="w-12 h-1 bg-emerald-500 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

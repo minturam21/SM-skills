@@ -74,7 +74,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
           id: Date.now().toString(),
           url: reader.result as string,
           category: activeUploadCategory.current,
-          title: `New ${activeUploadCategory.current} Photo`
+          title: '' // Caption is optional, default to empty
         };
         setLocalContent(prev => ({
           ...prev,
@@ -315,9 +315,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
                             </div>
                             <div className="space-y-3 px-1">
                               <div>
-                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Caption</label>
+                                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Caption (Optional)</label>
                                 <input 
                                   value={item.title} 
+                                  placeholder="Describe this photo..."
                                   onChange={e => updateGalleryItem(item.id, 'title', e.target.value)} 
                                   className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:ring-1 focus:ring-emerald-500 outline-none" 
                                 />
