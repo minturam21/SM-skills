@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Course } from '../types';
 
 interface CoursesPageProps {
@@ -68,9 +69,12 @@ const CoursesPage: React.FC<CoursesPageProps> = ({ courses }) => {
                 <p className="text-slate-600 text-sm leading-relaxed mb-8 flex-grow">
                   {course.description}
                 </p>
-                <button className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all active:scale-95">
-                  Enroll in Batch
-                </button>
+                <Link 
+                  to={`/enroll?course=${encodeURIComponent(course.name)}`}
+                  className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-emerald-600 transition-all active:scale-95 text-center flex items-center justify-center gap-2"
+                >
+                  <i className="fa-solid fa-graduation-cap"></i> Enroll Now
+                </Link>
               </div>
             </div>
           ))}

@@ -16,6 +16,7 @@ import NoticesPage from './pages/NoticesPage.tsx';
 import GalleryPage from './pages/GalleryPage.tsx';
 import ContactPage from './pages/ContactPage.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
+import EnrollmentPage from './pages/EnrollmentPage.tsx';
 
 const App: React.FC = () => {
   const [content, setContent] = useState<AppState>(() => {
@@ -43,6 +44,7 @@ const App: React.FC = () => {
             <Route path="/gallery" element={<GalleryPage content={content} />} />
             <Route path="/contact" element={<ContactPage config={content.site.contact} />} />
             <Route path="/admin" element={<AdminDashboard content={content} onUpdate={updateContent} />} />
+            <Route path="/enroll" element={<EnrollmentPage content={content} />} />
           </Routes>
         </main>
 

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { AppState } from '../types';
 
 interface HomePageProps {
@@ -119,12 +120,12 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
                     </div>
                     <h3 className="text-xl font-bold mb-3 text-slate-800">{course.name}</h3>
                     <p className="text-sm text-slate-500 line-clamp-2 mb-6 leading-relaxed flex-grow">{course.description}</p>
-                    <a 
-                      href={`#/courses`}
-                      className="w-full py-3 bg-slate-900 text-white text-center font-bold rounded-lg hover:bg-slate-800 transition-colors"
+                    <Link 
+                      to={`/enroll?course=${encodeURIComponent(course.name)}`}
+                      className="w-full py-3 bg-slate-900 text-white text-center font-bold rounded-lg hover:bg-emerald-600 transition-colors flex items-center justify-center gap-2"
                     >
-                      Course Details
-                    </a>
+                      <i className="fa-solid fa-graduation-cap"></i> Enroll Now
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -141,9 +142,9 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
           <p className="text-emerald-100 max-w-2xl mx-auto mb-10 text-lg">
             Join thousands of successful students who have transformed their lives through our training.
           </p>
-          <a href="#/contact" className="inline-block px-10 py-5 bg-white text-emerald-600 font-bold rounded-full hover:bg-slate-50 transition-all shadow-xl text-lg">
+          <Link to="/enroll" className="inline-block px-10 py-5 bg-white text-emerald-600 font-bold rounded-full hover:bg-slate-50 transition-all shadow-xl text-lg">
             Talk to an Advisor <i className="fa-solid fa-headset ml-2"></i>
-          </a>
+          </Link>
         </div>
       </section>
     </div>
