@@ -18,6 +18,9 @@ import ContactPage from './pages/ContactPage.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 import EnrollmentPage from './pages/EnrollmentPage.tsx';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
+import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
+import CareerGuidancePage from './pages/CareerGuidancePage.tsx';
+import PlacementReviewPage from './pages/PlacementReviewPage.tsx';
 
 const App: React.FC = () => {
   const [content, setContent] = useState<AppState>(() => {
@@ -27,33 +30,36 @@ const App: React.FC = () => {
     try {
       const parsed = JSON.parse(saved);
       
-      // Build a fresh state by merging saved data over the default template
       const mergedState: AppState = {
         ...INITIAL_CONTENT,
         ...parsed,
         site: { 
           ...INITIAL_CONTENT.site, 
           ...parsed.site,
-          // Explicitly ensure contact and footer objects are fully populated
           contact: { ...INITIAL_CONTENT.site.contact, ...(parsed.site?.contact || {}) },
           footer: { ...INITIAL_CONTENT.site.footer, ...(parsed.site?.footer || {}) }
         },
-        home: { ...INITIAL_CONTENT.home, ...parsed.home },
-        about: { ...INITIAL_CONTENT.about, ...parsed.about }
+        home: { 
+          ...INITIAL_CONTENT.home, 
+          ...parsed.home,
+          sectionLabels: { ...INITIAL_CONTENT.home.sectionLabels, ...(parsed.home?.sectionLabels || {}) }
+        },
+        about: { ...INITIAL_CONTENT.about, ...parsed.about },
+        placements: { ...INITIAL_CONTENT.placements, ...(parsed.placements || {}) },
+        legal: { ...INITIAL_CONTENT.legal, ...(parsed.legal || {}) },
+        career: { ...INITIAL_CONTENT.career, ...(parsed.career || {}) }
       };
 
-      // CRITICAL VALIDATION:
-      if (!Array.isArray(mergedState.site.social)) {
-        mergedState.site.social = INITIAL_CONTENT.site.social;
-      }
-
-      // Ensure notices and courses are arrays
+      if (!Array.isArray(mergedState.site.social)) mergedState.site.social = INITIAL_CONTENT.site.social;
       if (!Array.isArray(mergedState.notices)) mergedState.notices = INITIAL_CONTENT.notices;
       if (!Array.isArray(mergedState.courses)) mergedState.courses = INITIAL_CONTENT.courses;
+      if (!mergedState.placements.stats) mergedState.placements.stats = INITIAL_CONTENT.placements.stats;
+      if (!mergedState.placements.reviews) mergedState.placements.reviews = INITIAL_CONTENT.placements.reviews;
+      if (!mergedState.career.services) mergedState.career.services = INITIAL_CONTENT.career.services;
 
       return mergedState;
     } catch (e) {
-      console.error("Educational CMS: Error restoring state from localStorage. Falling back to default content.", e);
+      console.error("Educational CMS: Error restoring state from localStorage.", e);
       return INITIAL_CONTENT;
     }
   });
@@ -63,7 +69,7 @@ const App: React.FC = () => {
     try {
       localStorage.setItem('edu_insta_content', JSON.stringify(newContent));
     } catch (err) {
-      console.error("Educational CMS: Failed to save to localStorage (Quota likely exceeded)", err);
+      console.error("Educational CMS: Failed to save to localStorage", err);
     }
   };
 
@@ -83,7 +89,10 @@ const App: React.FC = () => {
             <Route path="/contact" element={<ContactPage config={content.site.contact} social={content.site.social} />} />
             <Route path="/admin" element={<AdminDashboard content={content} onUpdate={updateContent} />} />
             <Route path="/enroll" element={<EnrollmentPage content={content} />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicyPage siteName={content.site.name} />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage siteName={content.site.name} data={content.legal.privacy} />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage data={content.legal.terms} />} />
+            <Route path="/career-guidance" element={<CareerGuidancePage data={content.career} />} />
+            <Route path="/placement-review" element={<PlacementReviewPage placements={content.placements} label={content.home.sectionLabels.placementMainLabel} />} />
           </Routes>
         </main>
 
@@ -93,7 +102,6 @@ const App: React.FC = () => {
   );
 };
 
-// Helper component to reset scroll on route change
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
   useEffect(() => {

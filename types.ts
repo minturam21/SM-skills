@@ -49,6 +49,9 @@ export interface HomeConfig {
     coursesSubtitle: string;
     galleryTitle: string;
     gallerySubtitle: string;
+    placementsTitle: string;
+    placementsSubtitle: string;
+    placementMainLabel: string;
   };
   ctaBlock: {
     title: string;
@@ -57,11 +60,19 @@ export interface HomeConfig {
     buttonLink: string;
     visible: boolean;
   };
+  bigShowcase: {
+    visible: boolean;
+    image: string;
+    title: string;
+    subtitle: string;
+  };
   sections: {
     notices: boolean;
     featuredCourses: boolean;
     gallery: boolean;
     contact: boolean;
+    industryTieups: boolean;
+    placementReviews: boolean;
   };
 }
 
@@ -102,6 +113,46 @@ export interface FormField {
   options?: string[]; // For custom select types
 }
 
+export interface PlacementStat {
+  id: string;
+  label: string;
+  value: string;
+  icon: string;
+}
+
+export interface StudentReview {
+  id: string;
+  name: string;
+  course: string;
+  company: string;
+  companyIcon: string;
+  image: string;
+  text: string;
+  salaryIncrease: string;
+  role?: string;
+}
+
+export interface IndustryPartner {
+  id: string;
+  name: string;
+  icon: string;
+  image?: string;
+}
+
+export interface LegalSection {
+  id: string;
+  title: string;
+  content: string;
+}
+
+export interface CareerService {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  image?: string;
+}
+
 export interface AppState {
   site: SiteConfig;
   home: HomeConfig;
@@ -119,5 +170,35 @@ export interface AppState {
     mission: string;
     vision: string;
     timeline: Array<{ year: string; event: string; }>;
+  };
+  placements: {
+    stats: PlacementStat[];
+    reviews: StudentReview[];
+    partners: IndustryPartner[];
+    pageDescription: string;
+  };
+  legal: {
+    privacy: {
+      title: string;
+      subtitle: string;
+      sections: LegalSection[];
+    };
+    terms: {
+      title: string;
+      subtitle: string;
+      sections: LegalSection[];
+    };
+  };
+  career: {
+    hero: {
+      title: string;
+      subtitle: string;
+      bgImage?: string;
+    };
+    services: CareerService[];
+    cta: {
+      title: string;
+      subtitle: string;
+    };
   };
 }

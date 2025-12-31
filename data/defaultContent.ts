@@ -33,9 +33,9 @@ export const INITIAL_CONTENT: AppState = {
       bottomText: "Design & Architecture by Senior Architect",
       supportLinks: [
         { label: "Privacy Policy", path: "#/privacy-policy" },
-        { label: "Terms of Service", path: "#" },
-        { label: "Career Guidance", path: "#" },
-        { label: "Affiliate Program", path: "#" }
+        { label: "Terms of Service", path: "#/terms-of-service" },
+        { label: "Placement Reviews", path: "#/placement-review" },
+        { label: "Career Guidance", path: "#/career-guidance" }
       ]
     }
   },
@@ -71,7 +71,10 @@ export const INITIAL_CONTENT: AppState = {
       coursesTitle: "Popular Professional Courses",
       coursesSubtitle: "Industry-aligned programs with a focus on practical skills and employability.",
       galleryTitle: "Our Campus Life",
-      gallerySubtitle: "Take a visual journey through our state-of-the-art facilities and events."
+      gallerySubtitle: "Take a visual journey through our state-of-the-art facilities and events.",
+      placementsTitle: "Where Our Students Land",
+      placementsSubtitle: "From local startups to Global Fortune 500s, our placement cell ensures your career takes off.",
+      placementMainLabel: "Placement"
     },
     ctaBlock: {
       title: "Ready to Start Your Career Journey?",
@@ -80,11 +83,19 @@ export const INITIAL_CONTENT: AppState = {
       buttonLink: "#/enroll",
       visible: true
     },
+    bigShowcase: {
+      visible: true,
+      image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1600",
+      title: "Our Academic Excellence Group",
+      subtitle: "Celebrating our faculty and staff who make global standard education a reality every day."
+    },
     sections: {
       notices: true,
       featuredCourses: true,
       gallery: true,
-      contact: true
+      contact: true,
+      industryTieups: true,
+      placementReviews: true
     }
   },
   enrollmentForm: {
@@ -168,5 +179,79 @@ export const INITIAL_CONTENT: AppState = {
       { year: "2015", event: "Reached 5,000 Graduates" },
       { year: "2022", event: "Awarded Best Vocational Training Center" }
     ]
+  },
+  placements: {
+    pageDescription: "Real stories from real students who transformed their careers through our industry-leading technical programs.",
+    stats: [
+      { id: "s1", label: "Placement Rate", value: "94%", icon: "fa-chart-line" },
+      { id: "s2", label: "Avg. Salary Hike", value: "65%", icon: "fa-arrow-trend-up" },
+      { id: "s3", label: "Partner Companies", value: "250+", icon: "fa-handshake" },
+      { id: "s4", label: "Highest Package", value: "$140K", icon: "fa-money-bill-trend-up" }
+    ],
+    reviews: [
+      {
+        id: "r1",
+        name: "Sarah Jenkins",
+        course: "Full Stack Web Development",
+        role: "Software Engineer",
+        company: "Google",
+        companyIcon: "fa-google",
+        image: "https://i.pravatar.cc/150?u=sarah",
+        text: "The curriculum at Apex is intensely practical. I went from knowing basic HTML to building complex microservices.",
+        salaryIncrease: "+80% Hike"
+      },
+      {
+        id: "r2",
+        name: "David Chen",
+        course: "Data Science & AI",
+        role: "Data Scientist",
+        company: "Amazon",
+        companyIcon: "fa-amazon",
+        image: "https://i.pravatar.cc/150?u=david",
+        text: "The mentors here simplified complex ML algorithms and helped me build a portfolio that got me 3 job offers.",
+        salaryIncrease: "+110% Hike"
+      }
+    ],
+    partners: [
+      { id: "p1", name: "Google Cloud", icon: "fa-google" },
+      { id: "p2", name: "Amazon AWS", icon: "fa-amazon" },
+      { id: "p3", name: "Microsoft", icon: "fa-microsoft" },
+      { id: "p4", name: "Meta", icon: "fa-meta" },
+      { id: "p5", name: "IBM", icon: "fa-ibm" },
+      { id: "p6", name: "Tesla", icon: "fa-bolt-lightning" }
+    ]
+  },
+  legal: {
+    privacy: {
+      title: "Privacy and Policy",
+      subtitle: "Our commitment to your privacy and the security of your data is at the core of our educational values.",
+      sections: [
+        { id: "lp1", title: "Information Collection", content: "We collect information that you provide directly to us through the enrollment forms, newsletter signups, and contact requests. This may include your name, email address, phone number, and academic history." },
+        { id: "lp2", title: "How We Use Data", content: "Your data allows us to process applications, provide academic support, and send relevant updates about your programs. We do not sell your personal information to third parties." }
+      ]
+    },
+    terms: {
+      title: "Terms of Service",
+      subtitle: "Please read these terms carefully before enrolling in our professional programs.",
+      sections: [
+        { id: "lt1", title: "Acceptance of Terms", content: "By accessing our campus facilities or digital learning portals, you agree to be bound by these terms. These terms constitute a legally binding agreement between the student and the Institute." },
+        { id: "lt2", title: "Academic Integrity", content: "Students are expected to maintain the highest standards of honesty. Plagiarism, cheating, or any form of academic dishonesty will result in immediate disciplinary action." }
+      ]
+    }
+  },
+  career: {
+    hero: {
+      title: "Career Guidance",
+      subtitle: "Beyond education, we provide the tools, network, and mentorship to launch your professional career.",
+      bgImage: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1600"
+    },
+    services: [
+      { id: "cs1", title: "One-on-One Mentorship", description: "Direct access to industry veterans who provide personalized career roadmaps based on your strengths.", icon: "fa-user-tie" },
+      { id: "cs2", title: "Resume Building", description: "Workshops dedicated to crafting high-impact resumes and digital portfolios that catch recruiter attention.", icon: "fa-file-invoice" }
+    ],
+    cta: {
+      title: "Start Your Journey Today",
+      subtitle: "Our career advisors are available Monday through Friday to discuss your professional goals."
+    }
   }
 };

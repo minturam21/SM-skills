@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { AppState } from '../types.ts';
 
 interface EnrollmentPageProps {
@@ -189,7 +189,7 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
                   )}
 
                   <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                    By submitting, you agree to our privacy policy and terms of service.
+                    By submitting, you agree to our <Link to="/privacy-policy" className="text-emerald-600 hover:underline">privacy policy</Link> and terms of service.
                   </p>
                 </form>
               </div>
