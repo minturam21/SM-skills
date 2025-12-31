@@ -79,7 +79,8 @@ const App: React.FC = () => {
       <div className="flex flex-col min-h-screen">
         <Header config={content.site} />
         
-        <main className="flex-grow pt-20">
+        {/* pt-32 corresponds to h-32 header */}
+        <main className="flex-grow pt-32">
           <Routes>
             <Route path="/" element={<HomePage content={content} />} />
             <Route path="/about" element={<AboutPage content={content.about} siteName={content.site.name} />} />

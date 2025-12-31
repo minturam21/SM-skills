@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { AppState, Course, Notice, GalleryItem, FormField, SocialLink, PlacementStat, StudentReview, IndustryPartner, LegalSection, CareerService } from '../types.ts';
 
@@ -387,6 +388,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 pb-20">
+      <input type="file" ref={logoInputRef} className="hidden" accept="image/png,image/jpeg" onChange={handleLogoUpload} />
       <input type="file" ref={galleryInputRef} className="hidden" accept="image/*" onChange={handleGalleryUpload} />
       <input type="file" ref={thumbnailInputRef} className="hidden" accept="image/*" onChange={handleThumbnailUpload} />
       <input type="file" ref={courseInputRef} className="hidden" accept="image/*" onChange={handleCourseImageUpload} />
@@ -429,7 +431,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
         </div>
 
         <div className="flex-grow bg-slate-800 rounded-[2.5rem] p-8 md:p-12 border border-slate-700 shadow-3xl min-h-[70vh]">
-          {activeTab === 'site' && <SiteTab data={localContent.site} updateField={(f, v) => updateField('site', f, v)} onLogoClick={() => logoInputRef.current?.click()} />}
+          {activeTab === 'site' && <SiteTab data={localContent.site} updateField={(f, v) => updateField('site', f, v)} onLogoUploadClick={() => logoInputRef.current?.click()} />}
           {activeTab === 'home' && <HomeTab data={localContent.home} updateNestedField={(p, f, v) => updateNestedField('home', p, f, v)} updateHomeSubField={updateHomeSubField} onHeroBgClick={() => heroBgInputRef.current?.click()} onShowcaseImgClick={() => showcaseImgInputRef.current?.click()} addHighlight={addHighlight} updateHighlight={updateHighlight} deleteHighlight={deleteHighlight} />}
           {activeTab === 'courses' && <CoursesTab courses={localContent.courses} updateCourseItem={updateCourseItem} onCourseImageClick={(id) => { activeCourseId.current = id; courseInputRef.current?.click(); }} addItem={() => addItem('courses', { name: 'New Program', duration: '0 Months', mode: 'Hybrid', description: 'Description...', status: 'Active', image: 'https://picsum.photos/800/600', price: '$0' })} deleteItem={(id) => deleteItem('courses', id)} />}
           {activeTab === 'notices' && <NoticesTab notices={localContent.notices} updateNoticeItem={updateNoticeItem} addItem={() => addItem('notices', { date: new Date().toISOString().split('T')[0], title: 'New Notice', description: 'Notice text...', isImportant: false, category: 'General' })} deleteItem={(id) => deleteItem('notices', id)} />}
@@ -437,7 +439,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
           {activeTab === 'placements' && <PlacementsTab stats={localContent.placements.stats} reviews={localContent.placements.reviews} partners={localContent.placements.partners} updateStat={updateStatItem} addStat={addStatItem} deleteStat={deleteStatItem} updateReview={updateReviewItem} addReview={addReviewItem} deleteReview={deleteReviewItem} updatePartner={updatePartnerItem} addPartner={addPartnerItem} deletePartner={deletePartnerItem} onReviewImageClick={(id) => { activeReviewId.current = id; reviewInputRef.current?.click(); }} onPartnerImageClick={(id) => { activePartnerId.current = id; partnerInputRef.current?.click(); }} label={localContent.home.sectionLabels.placementMainLabel} />}
           {activeTab === 'legal' && <LegalTab legal={localContent.legal} updateLegal={updateLegal} updateSection={updateLegalSection} addSection={addLegalSection} deleteSection={deleteLegalSection} />}
           {activeTab === 'career' && <CareerTab career={localContent.career} updateHero={updateCareerHero} updateCta={updateCareerCta} updateService={updateCareerService} addService={addCareerService} deleteService={deleteCareerService} onHeroBgClick={() => careerHeroBgInputRef.current?.click()} onServiceImageClick={(id) => { activeCareerServiceId.current = id; careerServiceInputRef.current?.click(); }} />}
-          {/* Fix: Pass the specific updateFormField function to FormTab to match its expected (id, updates) signature */}
           {activeTab === 'form' && <FormTab fields={localContent.enrollmentForm.fields} addField={addFormField} updateField={updateFormField} deleteField={deleteFormField} />}
           {activeTab === 'contact' && <ContactTab contact={localContent.site.contact} social={localContent.site.social} updateContactField={updateContactField} addSocialLink={addSocialLink} updateSocialLink={updateSocialLink} removeSocialLink={removeSocialLink} />}
           {activeTab === 'footer' && <FooterTab footer={localContent.site.footer} updateFooterField={updateFooterField} addSupportLink={addSupportLink} updateSupportLink={updateSupportLink} deleteSupportLink={deleteSupportLink} />}

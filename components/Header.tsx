@@ -9,71 +9,69 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ config }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [logoError, setLogoError] = useState(false);
+  // Use the logo from configuration, fallback to the default if empty
+  const logoUrl = config.logo || "https://lwfiles.mycourse.app/62a6cd5-public/6efdd5e.png";
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 h-20">
+    <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 h-32 transition-all">
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
-        {/* Logo Section - Circular Instagram Style (Bigger) */}
-        <Link to="/" className="flex items-center gap-4 group">
-          <div className="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center transition-all group-hover:scale-105 ring-4 ring-emerald-50 shadow-md">
-            {config.logo && !logoError ? (
-              <img 
-                src={config.logo} 
-                alt={config.name} 
-                className="w-full h-full object-cover"
-                onError={() => setLogoError(true)}
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white font-bold text-2xl">
-                {config.name.charAt(0)}
-              </div>
-            )}
+        {/* Institutional Logo Section - Natural PNG, Unboxed */}
+        <Link to="/" className="flex items-center gap-6 group">
+          <div className="w-40 h-28 flex items-center justify-center transition-all group-hover:scale-105">
+            <img 
+              src={logoUrl} 
+              alt={config.name} 
+              className="w-full h-full object-contain"
+            />
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="font-black text-2xl text-slate-900 tracking-tighter">{config.name}</span>
-            <span className="text-xs text-emerald-600 font-bold uppercase tracking-[0.2em] mt-0.5">{config.tagline}</span>
+          <div className="flex flex-col leading-tight -ml-2">
+            <span className="font-black text-2xl md:text-3xl text-slate-900 tracking-tighter uppercase whitespace-nowrap">
+              {config.name}
+            </span>
+            <span className="text-[10px] md:text-xs text-emerald-600 font-black uppercase tracking-[0.3em] mt-1">
+              {config.tagline}
+            </span>
           </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden lg:flex items-center space-x-10">
           {config.navigation.map((item) => (
             <a
               key={item.label}
               href={item.path}
-              className="text-slate-600 hover:text-emerald-600 font-bold transition-colors text-sm uppercase tracking-wide"
+              className="text-slate-600 hover:text-emerald-600 font-black transition-colors text-[11px] uppercase tracking-widest"
             >
               {item.label}
             </a>
           ))}
           <Link
             to="/admin"
-            className="px-6 py-3 bg-slate-900 text-white rounded-full text-xs font-black hover:bg-emerald-600 transition-all shadow-lg active:scale-95"
+            className="px-8 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-2xl active:scale-95"
           >
             <i className="fa-solid fa-user-gear mr-2"></i>
-            Control Panel
+            Login
           </Link>
         </nav>
 
         {/* Mobile Toggle */}
         <button 
-          className="md:hidden text-slate-600 p-2"
+          className="lg:hidden text-slate-900 p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <i className={`fa-solid ${isMenuOpen ? 'fa-xmark' : 'fa-bars'} text-2xl`}></i>
+          <i className={`fa-solid ${isMenuOpen ? 'fa-xmark' : 'fa-bars-staggered'} text-3xl`}></i>
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-20 left-0 right-0 bg-white border-t border-slate-100 shadow-2xl animate-fade-in-down">
-          <div className="flex flex-col p-6 space-y-4">
+        <div className="lg:hidden absolute top-32 left-0 right-0 bg-white border-t border-slate-100 shadow-3xl animate-fade-in-down overflow-hidden">
+          <div className="flex flex-col p-8 space-y-6">
             {config.navigation.map((item) => (
               <a
                 key={item.label}
                 href={item.path}
-                className="text-slate-800 font-bold px-4 py-3 hover:bg-slate-50 rounded-xl"
+                className="text-slate-900 font-black text-lg uppercase tracking-widest px-4 py-4 hover:bg-slate-50 rounded-2xl transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.label}
@@ -81,10 +79,10 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
             ))}
             <Link
               to="/admin"
-              className="bg-emerald-600 text-white font-black py-4 rounded-2xl text-center shadow-xl mt-4"
+              className="bg-emerald-600 text-white font-black py-6 rounded-3xl text-center shadow-2xl mt-4 uppercase tracking-[0.2em] text-xs"
               onClick={() => setIsMenuOpen(false)}
             >
-              Control Panel
+              Institutional Login
             </Link>
           </div>
         </div>
