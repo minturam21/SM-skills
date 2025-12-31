@@ -51,7 +51,7 @@ const App: React.FC = () => {
       <div className="flex flex-col min-h-screen">
         <Header config={content.site} />
         
-        <main className="flex-grow pt-16">
+        <main className="flex-grow pt-20">
           <Routes>
             <Route path="/" element={<HomePage content={content} />} />
             <Route path="/about" element={<AboutPage content={content.about} siteName={content.site.name} />} />
