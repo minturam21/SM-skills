@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface PrivacyPolicyPageProps {
   siteName: string;
@@ -7,83 +7,87 @@ interface PrivacyPolicyPageProps {
 
 const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ siteName }) => {
   return (
-    <div className="min-h-screen bg-white pb-20">
-      {/* Simple Header */}
-      <section className="bg-slate-900 py-20 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">Privacy Policy</h1>
-          <p className="text-slate-400 font-medium">Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+    <div className="min-h-screen bg-white">
+      {/* Decorative Header */}
+      <section className="bg-slate-900 py-24 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl -ml-48 -mb-48"></div>
+        
+        <div className="container mx-auto px-4 relative z-10 text-center">
+          <span className="text-emerald-500 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Official Documents</span>
+          <h1 className="text-5xl md:text-6xl font-black mb-6 tracking-tight">Privacy and Policy</h1>
+          <p className="text-slate-400 font-medium max-w-2xl mx-auto text-lg leading-relaxed">
+            Our commitment to your privacy and the security of your data is at the core of our educational values.
+          </p>
         </div>
       </section>
 
-      {/* Policy Content */}
-      <div className="container mx-auto px-4 mt-16 max-w-4xl">
-        <div className="prose prose-slate lg:prose-lg mx-auto space-y-10 text-slate-700 leading-relaxed">
-          <section>
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">1. Introduction</h2>
+      {/* Content Body */}
+      <div className="container mx-auto px-4 py-20 max-w-4xl">
+        <div className="prose prose-slate lg:prose-lg mx-auto space-y-12 text-slate-700 leading-relaxed">
+          
+          <section className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
+            <h2 className="text-2xl font-black text-slate-900 mb-6 uppercase tracking-tight flex items-center gap-3">
+              <span className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-sm font-black shadow-inner">01</span>
+              Information Collection
+            </h2>
             <p>
-              Welcome to <strong>{siteName}</strong>. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us at our provided support email.
+              Welcome to the official <strong>Privacy and Policy</strong> portal for {siteName}. We collect information that you provide directly to us through the enrollment forms, newsletter signups, and contact requests. This may include your name, email address, phone number, and academic history. We also collect automated usage data to improve your experience on our portal.
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">2. Information We Collect</h2>
+          <section className="p-10 border border-transparent">
+            <h2 className="text-2xl font-black text-slate-900 mb-6 uppercase tracking-tight flex items-center gap-3">
+              <span className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-sm font-black shadow-inner">02</span>
+              How We Use Data
+            </h2>
             <p>
-              We collect personal information that you voluntarily provide to us when you express an interest in obtaining information about us or our products and Services, when you participate in activities on the Website (such as by posting messages in our online forums or entering competitions, contests or giveaways) or otherwise when you contact us.
+              Your data allows us to process applications, provide academic support, and send relevant updates about your programs. We do not sell your personal information to third parties. We use industry-standard encryption to protect all sensitive information.
             </p>
-            <ul className="list-disc pl-6 mt-4 space-y-2">
-              <li><strong>Personal Data:</strong> Name, email address, phone number, and educational background provided via enrollment forms.</li>
-              <li><strong>Usage Data:</strong> Information automatically collected when you visit our site, such as IP addresses, browser types, and pages visited.</li>
-            </ul>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+              {[
+                "Facilitating course enrollments",
+                "Improving user experience",
+                "Sending institutional news",
+                "Academic tracking & records"
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <i className="fa-solid fa-circle-check text-emerald-500"></i>
+                  <span className="text-sm font-bold text-slate-700">{item}</span>
+                </div>
+              ))}
+            </div>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">3. How We Use Your Information</h2>
+          <section className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100 shadow-sm">
+            <h2 className="text-2xl font-black text-slate-900 mb-6 uppercase tracking-tight flex items-center gap-3">
+              <span className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-sm font-black shadow-inner">03</span>
+              Cookie Policy
+            </h2>
             <p>
-              We use personal information collected via our Website for a variety of business purposes described below:
-            </p>
-            <ul className="list-disc pl-6 mt-4 space-y-2">
-              <li>To facilitate account creation and logon process.</li>
-              <li>To send administrative information to you.</li>
-              <li>To fulfill and manage your enrollment applications.</li>
-              <li>To respond to user inquiries and offer support.</li>
-              <li>For our internal marketing and promotional purposes.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">4. Sharing Your Information</h2>
-            <p>
-              We only share information with your consent, to comply with laws, to provide you with services, to protect your rights, or to fulfill business obligations. We do not sell your personal data to third parties.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">5. Data Security</h2>
-            <p>
-              We aim to protect your personal information through a system of organizational and technical security measures. However, please remember that no electronic transmission over the internet or information storage technology can be guaranteed to be 100% secure.
+              Our website uses "cookies" to enhance the user experience. Cookies are small files placed on your device that help us understand how you interact with our site. You can choose to disable cookies in your browser settings, though some features of the site may function improperly as a result.
             </p>
           </section>
 
-          <section>
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">6. Your Privacy Rights</h2>
+          <section className="p-10 border border-transparent">
+            <h2 className="text-2xl font-black text-slate-900 mb-6 uppercase tracking-tight flex items-center gap-3">
+              <span className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-sm font-black shadow-inner">04</span>
+              Security Measures
+            </h2>
             <p>
-              In some regions, such as the European Economic Area (EEA) and United Kingdom (UK), you have rights that allow you greater access to and control over your personal information. You may review, change, or terminate your account at any time by contacting us.
+              We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your data. We use secure servers and SSL technology to ensure that all data is encrypted and transferred safely.
             </p>
           </section>
 
-          <section className="pt-10 border-t border-slate-100">
-            <h2 className="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tight">7. Contact Us</h2>
-            <p>
-              If you have questions or comments about this policy, you may email us at our official support address listed on the contact page or call our campus directly.
-            </p>
-          </section>
-        </div>
-
-        <div className="mt-20 text-center">
-          <a href="#/" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:gap-4 transition-all">
-            <i className="fa-solid fa-arrow-left"></i> Return to Homepage
-          </a>
+          <div className="pt-12 border-t border-slate-100 flex flex-col items-center">
+            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Ready to proceed?</p>
+            <Link 
+              to="/" 
+              className="inline-flex items-center gap-3 px-12 py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-emerald-600 transition-all shadow-2xl active:scale-95 text-xs uppercase tracking-[0.2em]"
+            >
+              <i className="fa-solid fa-house"></i> Return to Homepage
+            </Link>
+          </div>
         </div>
       </div>
     </div>

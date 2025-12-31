@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { SiteConfig } from '../types';
 
 interface FooterProps {
@@ -11,6 +11,8 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
   const socialLinks = Array.isArray(config.social) ? config.social : [];
   const navigationLinks = Array.isArray(config.navigation) ? config.navigation : [];
   const supportLinks = Array.isArray(config.footer?.supportLinks) ? config.footer.supportLinks : [];
+
+  const isInternalLink = (path: string) => path.startsWith('#/');
 
   return (
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800">
@@ -54,11 +56,20 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
           <div>
             <h4 className="text-white font-semibold mb-6">{config.footer?.supportLinksLabel || 'Support'}</h4>
             <ul className="space-y-4 text-sm">
-              {supportLinks.map((link, idx) => (
-                <li key={idx}>
-                  <a href={link.path} className="hover:text-white transition-colors">{link.label}</a>
-                </li>
-              ))}
+              {supportLinks.map((link, idx) => {
+                const isInternal = isInternalLink(link.path);
+                const path = isInternal ? link.path.replace('#', '') : link.path;
+                
+                return (
+                  <li key={idx}>
+                    {isInternal ? (
+                      <Link to={path} className="hover:text-white transition-colors font-medium">{link.label}</Link>
+                    ) : (
+                      <a href={link.path} className="hover:text-white transition-colors">{link.label}</a>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
