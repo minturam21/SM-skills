@@ -31,6 +31,7 @@ const App: React.FC = () => {
     try {
       const parsed = JSON.parse(saved);
       
+      // Robust merge to ensure ctaBlock and other new fields are preserved
       const mergedState: AppState = {
         ...INITIAL_CONTENT,
         ...parsed,
@@ -43,7 +44,10 @@ const App: React.FC = () => {
         home: { 
           ...INITIAL_CONTENT.home, 
           ...parsed.home,
-          sectionLabels: { ...INITIAL_CONTENT.home.sectionLabels, ...(parsed.home?.sectionLabels || {}) }
+          sectionLabels: { ...INITIAL_CONTENT.home.sectionLabels, ...(parsed.home?.sectionLabels || {}) },
+          ctaBlock: { ...INITIAL_CONTENT.home.ctaBlock, ...(parsed.home?.ctaBlock || {}) },
+          sections: { ...INITIAL_CONTENT.home.sections, ...(parsed.home?.sections || {}) },
+          bigShowcase: { ...INITIAL_CONTENT.home.bigShowcase, ...(parsed.home?.bigShowcase || {}) }
         },
         about: { ...INITIAL_CONTENT.about, ...parsed.about },
         placements: { ...INITIAL_CONTENT.placements, ...(parsed.placements || {}) },

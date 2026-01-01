@@ -78,6 +78,39 @@ const HomeTab: React.FC<HomeTabProps> = ({
       </div>
     </div>
 
+    {/* CTA Block Controls */}
+    <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
+      <div className="flex justify-between items-center">
+        <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3"><i className="fa-solid fa-bullhorn"></i> CTA ACTION STRIP</h3>
+        <button onClick={() => updateNestedField('ctaBlock', 'visible', !data.ctaBlock.visible)} className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${data.ctaBlock.visible ? 'bg-emerald-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400'}`}>
+          {data.ctaBlock.visible ? 'VISIBLE' : 'HIDDEN'}
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+           <div className="space-y-1">
+             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Strip Title</label>
+             <input value={data.ctaBlock.title} onChange={e => updateNestedField('ctaBlock', 'title', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white font-bold" />
+           </div>
+           <div className="space-y-1">
+             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Strip Subtitle</label>
+             <textarea value={data.ctaBlock.subtitle} onChange={e => updateNestedField('ctaBlock', 'subtitle', e.target.value)} rows={2} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-slate-300 text-sm resize-none" />
+           </div>
+        </div>
+        <div className="space-y-4">
+           <div className="space-y-1">
+             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Button Text</label>
+             <input value={data.ctaBlock.buttonText} onChange={e => updateNestedField('ctaBlock', 'buttonText', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white font-bold" />
+           </div>
+           <div className="space-y-1">
+             <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Button Redirect Path</label>
+             <input value={data.ctaBlock.buttonLink} onChange={e => updateNestedField('ctaBlock', 'buttonLink', e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-emerald-500 font-mono text-xs" placeholder="/enroll" />
+             <p className="text-[8px] text-slate-500 italic mt-1 uppercase">Standard: /enroll or /courses</p>
+           </div>
+        </div>
+      </div>
+    </div>
+
     {/* Big Showcase Section Management */}
     <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
       <div className="flex justify-between items-center">

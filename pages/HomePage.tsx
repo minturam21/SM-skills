@@ -21,6 +21,15 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
     }
   };
 
+  const getCleanPath = (path: string) => {
+    if (!path) return '/';
+    // Remove both #/ and # prefixes for Link component
+    if (path.startsWith('#/')) return path.substring(1);
+    if (path.startsWith('#')) return path.substring(1);
+    // Ensure absolute path for router
+    return path.startsWith('/') ? path : `/${path}`;
+  };
+
   const spotlightNotice = notices[0];
   const tickerNotices = notices.length > 1 ? notices.slice(1) : notices;
 
@@ -88,7 +97,6 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
           </div>
           <div className="overflow-hidden flex relative">
             <div className="flex animate-marquee-horizontal whitespace-nowrap py-4">
-              {/* Using explicit industry partners list doubled for seamless loop */}
               {[...placements.partners, ...placements.partners].map((partner, idx) => (
                 <div key={`${partner.id}-${idx}`} className="flex items-center gap-4 px-12 group cursor-default">
                   {partner.image ? (
@@ -121,7 +129,7 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
         </div>
       </section>
 
-      {/* Where Students Got Placed - DYNAMIC SECTION */}
+      {/* Student Placements */}
       {home.sections.placementReviews && (
         <section className="py-24 bg-slate-50 relative overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
@@ -150,7 +158,6 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
                       <i className={`fa-brands ${p.companyIcon} text-2xl`}></i>
                       <span className="text-lg">{p.company}</span>
                     </div>
-                    <span className="text-[10px] font-bold text-slate-500 italic">{p.role}</span>
                   </div>
                 </div>
               ))}
@@ -184,9 +191,6 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
               <div className="lg:col-span-7 h-full">
                 {spotlightNotice && (
                   <div key={spotlightNotice.id} className="h-full bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-[3rem] p-12 flex flex-col justify-between group hover:border-emerald-500/50 transition-all shadow-2xl relative overflow-hidden min-h-[480px]">
-                    <div className="absolute top-0 right-0 p-12 opacity-10 group-hover:opacity-20 transition-opacity">
-                       <i className={`fa-solid ${getNoticeTheme(spotlightNotice.category).icon} text-9xl text-white`}></i>
-                    </div>
                     <div>
                       <div className={`inline-flex items-center gap-2 px-5 py-2 rounded-full mb-8 ${getNoticeTheme(spotlightNotice.category).bg} ${getNoticeTheme(spotlightNotice.category).text} text-[10px] font-black uppercase tracking-widest shadow-xl`}>
                         <i className={`fa-solid ${getNoticeTheme(spotlightNotice.category).icon}`}></i>
@@ -204,29 +208,20 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
                          <div className="w-12 h-12 rounded-2xl bg-slate-700 flex items-center justify-center text-slate-300">
                            <i className="fa-regular fa-clock text-xl"></i>
                          </div>
-                         <span className="text-sm font-black text-slate-500">{new Date(spotlightNotice.date).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                         <span className="text-sm font-black text-slate-500">{new Date(spotlightNotice.date).toLocaleDateString()}</span>
                        </div>
-                       {spotlightNotice.link && (
-                         <a href={spotlightNotice.link} className="text-emerald-500 font-black uppercase text-[10px] tracking-[0.3em] flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                           Details <i className="fa-solid fa-chevron-right"></i>
-                         </a>
-                       )}
                     </div>
                   </div>
                 )}
               </div>
 
               <div className="lg:col-span-5 h-[480px] relative">
-                <div className="absolute top-0 left-0 w-full z-20 h-24 bg-gradient-to-b from-slate-900 to-transparent pointer-events-none rounded-t-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-full z-20 h-24 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none rounded-b-3xl"></div>
-                
                 <div className="h-full overflow-hidden border border-white/5 rounded-[3rem] bg-slate-800/20">
                   <div className="p-8 border-b border-white/5 flex items-center justify-between sticky top-0 bg-slate-900/90 backdrop-blur-md z-30">
                     <span className="text-[10px] font-black text-white uppercase tracking-[0.3em] flex items-center gap-3">
-                      <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]"></span>
+                      <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse"></span>
                       Real-time Feed
                     </span>
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{tickerNotices.length} Updates</span>
                   </div>
 
                   <div className="relative h-full pt-6">
@@ -238,17 +233,11 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
                             key={`${notice.id}-${idx}`} 
                             className="bg-slate-800/60 border border-white/5 rounded-[2rem] p-8 flex gap-8 hover:bg-slate-700/80 transition-all group cursor-pointer hover:border-emerald-500/30 shrink-0"
                           >
-                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${theme.lightBg} ${theme.lightText} text-2xl shadow-inner group-hover:scale-110 transition-transform`}>
+                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 ${theme.lightBg} ${theme.lightText} text-2xl group-hover:scale-110 transition-transform`}>
                               <i className={`fa-solid ${theme.icon}`}></i>
                             </div>
                             <div className="flex flex-col justify-center overflow-hidden">
-                              <div className="flex items-center gap-4 mb-2">
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{new Date(notice.date).toLocaleDateString()}</span>
-                                <span className={`text-[8px] font-black uppercase tracking-[0.1em] px-3 py-1 rounded shadow-sm ${theme.bg} ${theme.text}`}>
-                                  {notice.category}
-                                </span>
-                              </div>
-                              <h4 className="text-white font-black text-xl group-hover:text-emerald-400 transition-colors line-clamp-1 truncate">{notice.title}</h4>
+                              <h4 className="text-white font-black text-xl group-hover:text-emerald-400 transition-colors truncate">{notice.title}</h4>
                             </div>
                           </div>
                         );
@@ -273,20 +262,11 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
               {courses.filter(c => c.status === 'Active').slice(0, 3).map(course => (
-                <div key={course.id} className="flex flex-col rounded-[2.5rem] overflow-hidden border border-slate-100 bg-white hover:shadow-3xl transition-all hover:-translate-y-2 group">
+                <div key={course.id} className="flex flex-col rounded-[2.5rem] overflow-hidden border border-slate-100 bg-white hover:shadow-3xl transition-all group">
                   <div className="relative h-64 overflow-hidden">
                     <img src={course.image} alt={course.name} className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110" />
-                    <div className="absolute top-6 left-6">
-                      <span className="px-5 py-2 bg-white/95 backdrop-blur-xl rounded-full text-[10px] font-black text-emerald-600 uppercase tracking-widest shadow-xl">
-                        {course.mode}
-                      </span>
-                    </div>
                   </div>
                   <div className="p-10 flex flex-col flex-grow">
-                    <div className="flex justify-between items-center mb-6">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{course.duration}</span>
-                      <span className="text-2xl font-black text-emerald-600">{course.price || 'Contact Us'}</span>
-                    </div>
                     <h3 className="text-2xl font-black mb-4 text-slate-900 tracking-tight group-hover:text-emerald-600 transition-colors">{course.name}</h3>
                     <p className="text-sm text-slate-500 line-clamp-2 mb-10 leading-relaxed flex-grow font-medium">{course.description}</p>
                     <Link 
@@ -306,13 +286,15 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
       {/* CTA Block */}
       {home.ctaBlock.visible && (
         <section className="py-24 bg-emerald-600 overflow-hidden relative">
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-emerald-500 rounded-full blur-[120px] opacity-30"></div>
           <div className="container mx-auto px-4 text-center relative z-10">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-10 tracking-tighter leading-tight">{home.ctaBlock.title}</h2>
             <p className="text-emerald-100 max-w-2xl mx-auto mb-14 text-xl font-medium leading-relaxed">
               {home.ctaBlock.subtitle}
             </p>
-            <Link to={home.ctaBlock.buttonLink} className="inline-flex items-center gap-4 px-12 py-6 bg-white text-emerald-600 font-black rounded-[2rem] hover:bg-slate-50 transition-all shadow-2xl text-xs uppercase tracking-[0.2em] active:scale-95">
+            <Link 
+              to={getCleanPath(home.ctaBlock.buttonLink)} 
+              className="inline-flex items-center gap-4 px-12 py-6 bg-white text-emerald-600 font-black rounded-[2rem] hover:bg-slate-50 transition-all shadow-2xl text-xs uppercase tracking-[0.2em] active:scale-95"
+            >
               {home.ctaBlock.buttonText} <i className="fa-solid fa-arrow-right-long text-lg"></i>
             </Link>
           </div>
@@ -324,27 +306,13 @@ const HomePage: React.FC<HomePageProps> = ({ content }) => {
         <section className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <div className="relative h-[600px] rounded-[3rem] overflow-hidden group shadow-3xl">
-              <img 
-                src={home.bigShowcase.image} 
-                alt={home.bigShowcase.title} 
-                className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-105" 
-              />
+              <img src={home.bigShowcase.image} alt={home.bigShowcase.title} className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent"></div>
-              
               <div className="absolute bottom-0 left-0 right-0 p-12 md:p-20 flex flex-col items-center text-center">
                 <div className="max-w-3xl animate-fade-in-up">
-                  <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl">
-                    {home.bigShowcase.title}
-                  </h2>
-                  <p className="text-slate-200 text-lg md:text-xl font-medium leading-relaxed drop-shadow-lg">
-                    {home.bigShowcase.subtitle}
-                  </p>
+                  <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl">{home.bigShowcase.title}</h2>
+                  <p className="text-slate-200 text-lg md:text-xl font-medium leading-relaxed drop-shadow-lg">{home.bigShowcase.subtitle}</p>
                 </div>
-              </div>
-
-              {/* Decorative Accent */}
-              <div className="absolute top-10 left-10 p-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl hidden md:block">
-                <i className="fa-solid fa-award text-3xl text-emerald-400"></i>
               </div>
             </div>
           </div>
