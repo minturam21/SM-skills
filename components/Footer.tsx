@@ -14,56 +14,55 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
 
   const isInternalLink = (path: string) => {
     if (!path) return false;
-    // Handle standard SPA paths (/about) and hash-style paths (#/about)
     return path.startsWith('#/') || path.startsWith('/') || path.includes(window.location.origin);
   };
 
   const getCleanPath = (path: string) => {
     if (!path) return '/';
-    // Remove the hash if it exists for Link component compatibility
     if (path.startsWith('#/')) return path.substring(1);
     if (path.startsWith('#')) return path.substring(1);
     return path;
   };
 
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800">
+    <footer className="bg-slate-900 text-slate-300 pt-16 md:pt-24 pb-12 border-t border-slate-800">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 mb-16">
           {/* Brand Info */}
-          <div className="col-span-1 md:col-span-1">
-            <h3 className="text-white text-xl font-bold mb-4">{config.name}</h3>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+            <h3 className="text-white text-2xl font-black mb-6 uppercase tracking-tighter">{config.name}</h3>
+            <p className="text-slate-400 text-sm md:text-base leading-relaxed mb-8 max-w-xs">
               {config.footer?.brandDescription || 'Empowering professional education for over a decade.'}
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
               {socialLinks.map(social => (
                 <a 
                   key={social.id}
                   href={social.url} 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-md"
+                  className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-md focus-visible:ring-2 focus-visible:ring-emerald-500"
                   title={social.platform}
+                  aria-label={`Follow us on ${social.platform}`}
                 >
-                  <i className={`fa-brands ${social.icon}`}></i>
+                  <i className={`fa-brands ${social.icon} text-lg`} aria-hidden="true"></i>
                 </a>
               ))}
             </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h4 className="text-white font-semibold mb-6">{config.footer?.quickLinksLabel || 'Quick Links'}</h4>
-            <ul className="space-y-4 text-sm">
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-black text-xs uppercase tracking-[0.3em] mb-8">{config.footer?.quickLinksLabel || 'Navigation'}</h4>
+            <ul className="space-y-4 text-sm font-medium">
               {navigationLinks.map(nav => {
                 const isInternal = isInternalLink(nav.path);
                 return (
                   <li key={nav.label}>
                     {isInternal ? (
-                      <Link to={getCleanPath(nav.path)} className="hover:text-white transition-colors">{nav.label}</Link>
+                      <Link to={getCleanPath(nav.path)} className="hover:text-emerald-500 transition-colors block py-1">{nav.label}</Link>
                     ) : (
-                      <a href={nav.path} className="hover:text-white transition-colors">{nav.label}</a>
+                      <a href={nav.path} className="hover:text-emerald-500 transition-colors block py-1">{nav.label}</a>
                     )}
                   </li>
                 );
@@ -72,9 +71,9 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
           </div>
 
           {/* Support */}
-          <div>
-            <h4 className="text-white font-semibold mb-6">{config.footer?.supportLinksLabel || 'Support'}</h4>
-            <ul className="space-y-4 text-sm">
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-black text-xs uppercase tracking-[0.3em] mb-8">{config.footer?.supportLinksLabel || 'Resources'}</h4>
+            <ul className="space-y-4 text-sm font-medium">
               {supportLinks.map((link, idx) => {
                 const isInternal = isInternalLink(link.path);
                 const cleanPath = getCleanPath(link.path);
@@ -82,9 +81,9 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
                 return (
                   <li key={idx}>
                     {isInternal ? (
-                      <Link to={cleanPath} className="hover:text-white transition-colors font-medium">{link.label}</Link>
+                      <Link to={cleanPath} className="hover:text-emerald-500 transition-colors block py-1">{link.label}</Link>
                     ) : (
-                      <a href={link.path} className="hover:text-white transition-colors">{link.label}</a>
+                      <a href={link.path} className="hover:text-emerald-500 transition-colors block py-1">{link.label}</a>
                     )}
                   </li>
                 );
@@ -93,28 +92,28 @@ const Footer: React.FC<FooterProps> = ({ config }) => {
           </div>
 
           {/* Contact Info */}
-          <div>
-            <h4 className="text-white font-semibold mb-6">{config.footer?.reachUsLabel || 'Reach Us'}</h4>
-            <ul className="space-y-4 text-sm">
-              <li className="flex items-start gap-3">
-                <i className="fa-solid fa-location-dot mt-1 text-emerald-500"></i>
-                <span>{config.contact?.address}</span>
+          <div className="text-center sm:text-left">
+            <h4 className="text-white font-black text-xs uppercase tracking-[0.3em] mb-8">{config.footer?.reachUsLabel || 'Reach Us'}</h4>
+            <ul className="space-y-6 text-sm font-medium">
+              <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
+                <i className="fa-solid fa-location-dot mt-1 text-emerald-500 text-base" aria-hidden="true"></i>
+                <span className="leading-relaxed">{config.contact?.address}</span>
               </li>
-              <li className="flex items-center gap-3">
-                <i className="fa-solid fa-phone text-emerald-500"></i>
+              <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
+                <i className="fa-solid fa-phone text-emerald-500 text-base" aria-hidden="true"></i>
                 <span>{config.contact?.phone}</span>
               </li>
-              <li className="flex items-center gap-3">
-                <i className="fa-solid fa-envelope text-emerald-500"></i>
-                <span>{config.contact?.email}</span>
+              <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
+                <i className="fa-solid fa-envelope text-emerald-500 text-base" aria-hidden="true"></i>
+                <span className="break-all">{config.contact?.email}</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between text-xs font-medium text-slate-500 uppercase tracking-widest">
-          <p>© {new Date().getFullYear()} {config.name}. All rights reserved.</p>
-          <p className="mt-4 md:mt-0">{config.footer?.bottomText || 'Design & Architecture by Senior Architect'}</p>
+        <div className="border-t border-slate-800 pt-10 flex flex-col md:flex-row items-center justify-between text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">
+          <p className="text-center md:text-left">© {new Date().getFullYear()} {config.name}. Professional Educational Entity.</p>
+          <p className="mt-6 md:mt-0 text-center md:text-right">{config.footer?.bottomText || 'Standard Excellence Protocol'}</p>
         </div>
       </div>
     </footer>

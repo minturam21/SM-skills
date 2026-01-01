@@ -32,7 +32,6 @@ const App: React.FC = () => {
     try {
       const parsed = JSON.parse(saved);
       
-      // Robust merge to ensure ctaBlock and other new fields are preserved
       const mergedState: AppState = {
         ...INITIAL_CONTENT,
         ...parsed,
@@ -80,9 +79,17 @@ const App: React.FC = () => {
   return (
     <HashRouter>
       <ScrollToTop />
-      <div className="flex flex-col min-h-screen">
+      {/* Skip to content for A11y */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-emerald-600 focus:text-white focus:px-6 focus:py-3 focus:rounded-xl focus:font-black focus:shadow-2xl"
+      >
+        Skip to Content
+      </a>
+      
+      <div className="flex flex-col min-h-screen overflow-x-hidden">
         <Header config={content.site} />
-        <main className="flex-grow pt-32">
+        <main id="main-content" className="flex-grow pt-32 focus:outline-none" tabIndex={-1}>
           <Routes>
             <Route path="/" element={<HomePage content={content} />} />
             <Route path="/about" element={<AboutPage content={content.about} siteName={content.site.name} />} />
@@ -96,7 +103,6 @@ const App: React.FC = () => {
             <Route path="/terms-of-service" element={<TermsOfServicePage data={content.legal.terms} />} />
             <Route path="/career-guidance" element={<CareerGuidancePage data={content.career} />} />
             <Route path="/placement-review" element={<PlacementReviewPage placements={content.placements} label={content.home.sectionLabels.placementMainLabel} />} />
-            {/* Catch-all 404 Fallback Route */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
@@ -106,16 +112,10 @@ const App: React.FC = () => {
   );
 };
 
-/**
- * Enhanced ScrollToTop to handle standard page transitions AND hash fragment scrolling.
- * HashRouter puts the fragment inside the hash, so location.pathname handles the route,
- * but element IDs need custom handling for smooth scrolling.
- */
 const ScrollToTop: React.FC = () => {
   const { pathname, hash } = useLocation();
   
   useEffect(() => {
-    // If there is a hash (e.g. #notices), scroll to the element with that ID
     if (hash) {
       const id = hash.replace('#', '');
       const element = document.getElementById(id);
@@ -123,7 +123,6 @@ const ScrollToTop: React.FC = () => {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // Otherwise, scroll to top of the page on route change
       window.scrollTo(0, 0);
     }
   }, [pathname, hash]);

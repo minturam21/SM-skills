@@ -11,6 +11,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        
+        /* Institutional Clean Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; /* Slate-900 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #059669; /* Emerald-600 */
+            border-radius: 10px;
+            border: 2px solid #0f172a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981; /* Emerald-500 */
+        }
+        
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Prevent scrollbar from causing layout shift */
+        body {
+            overflow-y: scroll;
+        }
     </style>
 <script type="importmap">
 {
