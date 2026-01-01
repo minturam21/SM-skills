@@ -1,6 +1,8 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AppState, Course, Notice, GalleryItem, FormField, SocialLink, PlacementStat, StudentReview, IndustryPartner, LegalSection, CareerService } from '../types.ts';
+import { INITIAL_CONTENT } from '../data/defaultContent.ts';
+import { optimizeImage } from '../utils/imageOptimizer.ts';
 
 // Modular Sections
 import SiteTab from '../admin/SiteTab.tsx';
@@ -24,7 +26,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
   const [activeTab, setActiveTab] = useState<'site' | 'home' | 'courses' | 'notices' | 'gallery' | 'form' | 'contact' | 'footer' | 'placements' | 'legal' | 'career'>('site');
   const [localContent, setLocalContent] = useState(content);
   const [statusMsg, setStatusMsg] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
   
+  useEffect(() => {
+    setLocalContent(content);
+  }, [content]);
+
   const logoInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
@@ -43,123 +50,47 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
   const activePartnerId = useRef<string | null>(null);
   const activeCareerServiceId = useRef<string | null>(null);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsProcessing(true);
+    setStatusMsg('Saving changes...');
+    await new Promise(r => setTimeout(r, 600)); // UX feedback delay
     onUpdate(localContent);
-    setStatusMsg('Changes saved successfully! All updates are now live.');
+    setStatusMsg('Changes saved successfully!');
+    setIsProcessing(false);
     setTimeout(() => setStatusMsg(''), 5000);
   };
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDiscard = () => {
+    if (window.confirm("Discard all unsaved changes and revert to the last saved version?")) {
+      setLocalContent(content);
+      setStatusMsg('Changes discarded.');
+      setTimeout(() => setStatusMsg(''), 3000);
+    }
+  };
+
+  const handleFactoryReset = () => {
+    if (window.confirm("RESTORE FACTORY SETTINGS? This will delete all custom content and reset the institute to its original state.")) {
+      setLocalContent(INITIAL_CONTENT);
+      onUpdate(INITIAL_CONTENT);
+      setStatusMsg('Site has been reset to defaults.');
+      setTimeout(() => setStatusMsg(''), 5000);
+    }
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateField('site', 'logo', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleHeroBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateNestedField('home', 'hero', 'bgImage', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleShowcaseUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateNestedField('home', 'bigShowcase', 'image', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const category = activeThumbnailCategory.current;
-    if (file && category) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setLocalContent(prev => ({
-          ...prev,
-          galleryMetadata: {
-            ...(prev.galleryMetadata || {}),
-            [category]: reader.result as string
-          }
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleCourseImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const id = activeCourseId.current;
-    if (file && id) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateCourseItem(id, 'image', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleReviewImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const id = activeReviewId.current;
-    if (file && id) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateReviewItem(id, 'image', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handlePartnerImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const id = activePartnerId.current;
-    if (file && id) {
-      const reader = new FileReader();
-      reader.onloadend = () => updatePartnerItem(id, 'image', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleCareerHeroBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateCareerHero('bgImage', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleCareerServiceImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    const id = activeCareerServiceId.current;
-    if (file && id) {
-      const reader = new FileReader();
-      reader.onloadend = () => updateCareerService(id, 'image', reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newItem: GalleryItem = {
-          id: Date.now().toString(),
-          url: reader.result as string,
-          category: activeUploadCategory.current,
-          title: ''
-        };
-        setLocalContent(prev => ({
-          ...prev,
-          gallery: [newItem, ...prev.gallery]
-        }));
-      };
-      reader.readAsDataURL(file);
+      setIsProcessing(true);
+      try {
+        const optimizedUrl = await optimizeImage(file);
+        callback(optimizedUrl);
+      } catch (err) {
+        console.error("Optimization failed", err);
+        setStatusMsg("Error: Image was too large or invalid.");
+      } finally {
+        setIsProcessing(false);
+        e.target.value = '';
+      }
     }
   };
 
@@ -388,30 +319,80 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 pb-20">
-      <input type="file" ref={logoInputRef} className="hidden" accept="image/png,image/jpeg" onChange={handleLogoUpload} />
-      <input type="file" ref={galleryInputRef} className="hidden" accept="image/*" onChange={handleGalleryUpload} />
-      <input type="file" ref={thumbnailInputRef} className="hidden" accept="image/*" onChange={handleThumbnailUpload} />
-      <input type="file" ref={courseInputRef} className="hidden" accept="image/*" onChange={handleCourseImageUpload} />
-      <input type="file" ref={heroBgInputRef} className="hidden" accept="image/*" onChange={handleHeroBgUpload} />
-      <input type="file" ref={showcaseImgInputRef} className="hidden" accept="image/*" onChange={handleShowcaseUpload} />
-      <input type="file" ref={reviewInputRef} className="hidden" accept="image/*" onChange={handleReviewImageUpload} />
-      <input type="file" ref={partnerInputRef} className="hidden" accept="image/*" onChange={handlePartnerImageUpload} />
-      <input type="file" ref={careerHeroBgInputRef} className="hidden" accept="image/*" onChange={handleCareerHeroBgUpload} />
-      <input type="file" ref={careerServiceInputRef} className="hidden" accept="image/*" onChange={handleCareerServiceImageUpload} />
+      {/* Hidden File Inputs mapping to optimization utility */}
+      <input type="file" ref={logoInputRef} className="hidden" accept="image/png,image/jpeg" onChange={(e) => handleUpload(e, (url) => updateField('site', 'logo', url))} />
+      <input type="file" ref={heroBgInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => updateNestedField('home', 'hero', 'bgImage', url))} />
+      <input type="file" ref={showcaseImgInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => updateNestedField('home', 'bigShowcase', 'image', url))} />
+      <input type="file" ref={galleryInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => {
+        const newItem: GalleryItem = { id: Date.now().toString(), url, category: activeUploadCategory.current, title: '' };
+        setLocalContent(prev => ({ ...prev, gallery: [newItem, ...prev.gallery] }));
+      })} />
+      <input type="file" ref={thumbnailInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => {
+        if (!activeThumbnailCategory.current) return;
+        setLocalContent(prev => ({ ...prev, galleryMetadata: { ...(prev.galleryMetadata || {}), [activeThumbnailCategory.current!]: url } }));
+      })} />
+      <input type="file" ref={courseInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => {
+        if (!activeCourseId.current) return;
+        updateCourseItem(activeCourseId.current, 'image', url);
+      })} />
+      <input type="file" ref={reviewInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => {
+        if (!activeReviewId.current) return;
+        updateReviewItem(activeReviewId.current, 'image', url);
+      })} />
+      <input type="file" ref={partnerInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => {
+        if (!activePartnerId.current) return;
+        updatePartnerItem(activePartnerId.current, 'image', url);
+      })} />
+      <input type="file" ref={careerHeroBgInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => updateCareerHero('bgImage', url))} />
+      <input type="file" ref={careerServiceInputRef} className="hidden" accept="image/*" onChange={(e) => handleUpload(e, (url) => {
+        if (!activeCareerServiceId.current) return;
+        updateCareerService(activeCareerServiceId.current, 'image', url);
+      })} />
 
       <div className="bg-slate-800 border-b border-slate-700 p-6 sticky top-0 z-40 shadow-2xl">
         <div className="container mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="flex items-center gap-4">
             <h1 className="text-2xl font-black flex items-center gap-3 tracking-tight">
               <i className="fa-solid fa-gauge-high text-emerald-500"></i>
               INSTITUTE ADMIN
             </h1>
+            {isProcessing && (
+              <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
+                <span className="text-[10px] font-bold uppercase text-emerald-400">Processing...</span>
+              </div>
+            )}
           </div>
-          <button onClick={handleSave} className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-xs font-black transition-all active:scale-95 shadow-lg">
-            SAVE ALL CHANGES
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={handleDiscard} 
+              className="px-5 py-2 text-slate-400 hover:text-white text-xs font-black transition-all border border-slate-700 rounded-lg"
+              disabled={isProcessing}
+            >
+              DISCARD
+            </button>
+            <button 
+              onClick={handleSave} 
+              className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-xs font-black transition-all active:scale-95 shadow-lg disabled:opacity-50"
+              disabled={isProcessing}
+            >
+              {isProcessing ? 'SAVING...' : 'SAVE ALL CHANGES'}
+            </button>
+            <div className="w-px h-8 bg-slate-700 mx-2"></div>
+            <button 
+              onClick={handleFactoryReset} 
+              className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+              title="Reset to Factory Defaults"
+            >
+              <i className="fa-solid fa-trash-arrow-up"></i>
+            </button>
+          </div>
         </div>
-        {statusMsg && <div className="mt-4 p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 rounded-lg text-center text-xs font-black animate-pulse">{statusMsg}</div>}
+        {statusMsg && (
+          <div className="mt-4 p-3 bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 rounded-lg text-center text-xs font-black animate-pulse">
+            {statusMsg}
+          </div>
+        )}
       </div>
 
       <div className="container mx-auto px-4 mt-8 flex flex-col md:flex-row gap-8">

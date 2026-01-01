@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { INITIAL_CONTENT } from './data/defaultContent.ts';
 import { AppState } from './types.ts';
 
@@ -23,6 +23,7 @@ import CareerGuidancePage from './pages/CareerGuidancePage.tsx';
 import PlacementReviewPage from './pages/PlacementReviewPage.tsx';
 
 const App: React.FC = () => {
+  const [isInitializing, setIsInitializing] = useState(true);
   const [content, setContent] = useState<AppState>(() => {
     const saved = localStorage.getItem('edu_insta_content');
     if (!saved) return INITIAL_CONTENT;
@@ -50,26 +51,24 @@ const App: React.FC = () => {
         career: { ...INITIAL_CONTENT.career, ...(parsed.career || {}) }
       };
 
-      if (!Array.isArray(mergedState.site.social)) mergedState.site.social = INITIAL_CONTENT.site.social;
-      if (!Array.isArray(mergedState.notices)) mergedState.notices = INITIAL_CONTENT.notices;
-      if (!Array.isArray(mergedState.courses)) mergedState.courses = INITIAL_CONTENT.courses;
-      if (!mergedState.placements.stats) mergedState.placements.stats = INITIAL_CONTENT.placements.stats;
-      if (!mergedState.placements.reviews) mergedState.placements.reviews = INITIAL_CONTENT.placements.reviews;
-      if (!mergedState.career.services) mergedState.career.services = INITIAL_CONTENT.career.services;
-
       return mergedState;
     } catch (e) {
-      console.error("Educational CMS: Error restoring state from localStorage.", e);
+      console.error("Educational CMS: Error restoring state.", e);
       return INITIAL_CONTENT;
     }
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsInitializing(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const updateContent = (newContent: AppState) => {
     setContent(newContent);
     try {
       localStorage.setItem('edu_insta_content', JSON.stringify(newContent));
     } catch (err) {
-      console.error("Educational CMS: Failed to save to localStorage", err);
+      console.error("Educational CMS: Failed to save", err);
     }
   };
 
@@ -78,13 +77,11 @@ const App: React.FC = () => {
       <ScrollToTop />
       <div className="flex flex-col min-h-screen">
         <Header config={content.site} />
-        
-        {/* pt-32 corresponds to h-32 header */}
         <main className="flex-grow pt-32">
           <Routes>
             <Route path="/" element={<HomePage content={content} />} />
             <Route path="/about" element={<AboutPage content={content.about} siteName={content.site.name} />} />
-            <Route path="/courses" element={<CoursesPage courses={content.courses} />} />
+            <Route path="/courses" element={<CoursesPage courses={content.courses} isLoading={isInitializing} />} />
             <Route path="/notices" element={<NoticesPage notices={content.notices} />} />
             <Route path="/gallery" element={<GalleryPage content={content} />} />
             <Route path="/contact" element={<ContactPage config={content.site.contact} social={content.site.social} />} />
@@ -96,7 +93,6 @@ const App: React.FC = () => {
             <Route path="/placement-review" element={<PlacementReviewPage placements={content.placements} label={content.home.sectionLabels.placementMainLabel} />} />
           </Routes>
         </main>
-
         <Footer config={content.site} />
       </div>
     </HashRouter>
