@@ -13,7 +13,8 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
   const [fullscreenItem, setFullscreenItem] = useState<GalleryItem | null>(null);
 
   // Grouping categories and counts
-  const categories = Array.from(new Set(gallery.map(item => item.category)));
+  // Explicitly type categories as string[] to fix 'unknown' inference issues
+  const categories: string[] = Array.from(new Set(gallery.map(item => item.category)));
   
   const handleAlbumClick = (category: string) => {
     setSelectedCategory(category);
@@ -87,7 +88,8 @@ const GalleryPage: React.FC<GalleryPageProps> = ({ content }) => {
         {/* ALBUM GRID VIEW */}
         {view === 'albums' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {categories.map(cat => {
+            {/* Added explicit type for 'cat' parameter to fix TypeScript unknown index error */}
+            {categories.map((cat: string) => {
               const thumbnail = galleryMetadata?.[cat];
               const count = gallery.filter(i => i.category === cat).length;
               

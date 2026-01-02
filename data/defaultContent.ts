@@ -24,6 +24,7 @@ export const INITIAL_CONTENT: AppState = {
       { label: "Courses", path: "/courses" },
       { label: "Notices", path: "/notices" },
       { label: "Gallery", path: "/gallery" },
+      { label: "FAQ", path: "/faq" },
       { label: "Contact", path: "/contact" }
     ],
     footer: {
@@ -100,13 +101,32 @@ export const INITIAL_CONTENT: AppState = {
     }
   },
   enrollmentForm: {
-    title: "SMS Application Form",
-    description: "Provide your details to begin the enrollment process.",
+    title: "SMS Official Enrollment",
+    description: "Please complete the comprehensive academic application form below. Our registrar team evaluates each candidate for program alignment.",
+    successTitle: "Application Received",
+    successMessage: "Your registration is being processed. An institutional registrar will review your application and contact you within 48 business hours for the next steps.",
+    roadmapTitle: "Enrollment Flow",
+    roadmapSteps: [
+      { id: "s1", title: "Identity Submission", description: "Provide verifiable academic and personal records for initial screening." },
+      { id: "s2", title: "Technical Review", description: "Specialists evaluate your alignment with the chosen program track." },
+      { id: "s3", title: "Confirmation", description: "Official admission offer and joining protocols sent via advisor call." }
+    ],
     fields: [
-      { id: "f1", label: "Legal Full Name", type: "text", placeholder: "e.g. Michael Smith", required: true },
+      { id: "f1", label: "Student Full Name", type: "text", placeholder: "e.g. Michael Smith", required: true },
       { id: "f2", label: "Email Address", type: "email", placeholder: "mike@example.com", required: true },
-      { id: "f3", label: "Phone Number", type: "tel", placeholder: "+1 (555) 000-0000", required: true },
-      { id: "f4", label: "Program Track", type: "course-select", placeholder: "Choose a Course", required: true }
+      { id: "f3", label: "Father's / Guardian Name", type: "text", placeholder: "Enter Full Name", required: true },
+      { id: "f4", label: "Date of Birth", type: "date", placeholder: "", required: true },
+      { id: "f5", label: "Primary Contact Number", type: "tel", placeholder: "+1 (555) 000-0000", required: true },
+      { id: "f6", label: "Alternative Contact Number", type: "tel", placeholder: "Secondary or Emergency Phone", required: false },
+      { id: "f7_addr", label: "Permanent Residential Address", type: "textarea", placeholder: "House No, Street, Landmark", required: true },
+      { id: "f7_city", label: "City", type: "text", placeholder: "e.g. New York", required: true },
+      { id: "f7_state", label: "State", type: "text", placeholder: "e.g. NY", required: true },
+      { id: "f7_pin", label: "PIN Code / Zip Code", type: "text", placeholder: "6-digit PIN", required: true },
+      { id: "f8", label: "Highest Qualification", type: "select", placeholder: "Select Qualification", required: true, options: ["High School", "Secondary School (10th)", "Higher Secondary (12th)", "Diploma Holder", "Graduate / Bachelor's", "Post Graduate"] },
+      { id: "f9", label: "Course Interest", type: "course-select", placeholder: "Choose Program Track", required: true },
+      { id: "f10", label: "Source of Information", type: "select", placeholder: "How did you hear about us?", required: true, options: ["Social Media", "Friend / Student Referral", "Newspaper / Print", "Web Search", "Educational Seminar"] },
+      { id: "f11", label: "Current Education / Occupation", type: "text", placeholder: "e.g. Final year student / Freelancer", required: true },
+      { id: "f12", label: "Additional Questions / Remarks", type: "textarea", placeholder: "Any specific queries for the registrar?", required: false }
     ]
   },
   courses: [
@@ -132,6 +152,10 @@ export const INITIAL_CONTENT: AppState = {
     }
   ],
   gallery: [],
+  faqs: [
+    { id: "q1", question: "What is the admission criteria?", answer: "We look for a basic technical aptitude and a passion for learning. Previous experience is not mandatory for foundation tracks.", category: "Admissions" },
+    { id: "q2", question: "Do you provide job assistance?", answer: "Yes, our Placement Cell works with 200+ global partners to ensure high-quality career launches for our graduates.", category: "Placements" }
+  ],
   about: {
     intro: "SM Skills Training Institute (SMS) was founded in 2024 with a mission to modernize technical education through practical, industry-first curricula.",
     mission: "To empower students with the exact skills required by top global employers.",

@@ -21,6 +21,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
 import CareerGuidancePage from './pages/CareerGuidancePage.tsx';
 import PlacementReviewPage from './pages/PlacementReviewPage.tsx';
+import FAQPage from './pages/FAQPage.tsx';
 import NotFoundPage from './pages/NotFoundPage.tsx';
 
 const App: React.FC = () => {
@@ -52,7 +53,8 @@ const App: React.FC = () => {
         about: { ...INITIAL_CONTENT.about, ...parsed.about },
         placements: { ...INITIAL_CONTENT.placements, ...(parsed.placements || {}) },
         legal: { ...INITIAL_CONTENT.legal, ...(parsed.legal || {}) },
-        career: { ...INITIAL_CONTENT.career, ...(parsed.career || {}) }
+        career: { ...INITIAL_CONTENT.career, ...(parsed.career || {}) },
+        faqs: parsed.faqs || INITIAL_CONTENT.faqs
       };
 
       return mergedState;
@@ -96,6 +98,7 @@ const App: React.FC = () => {
             <Route path="/courses" element={<CoursesPage courses={content.courses} isLoading={isInitializing} />} />
             <Route path="/notices" element={<NoticesPage notices={content.notices} />} />
             <Route path="/gallery" element={<GalleryPage content={content} />} />
+            <Route path="/faq" element={<FAQPage faqs={content.faqs} contact={content.site.contact} />} />
             <Route path="/contact" element={<ContactPage config={content.site.contact} social={content.site.social} />} />
             <Route path="/admin" element={<AdminDashboard content={content} onUpdate={updateContent} />} />
             <Route path="/enroll" element={<EnrollmentPage content={content} />} />

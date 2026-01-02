@@ -105,13 +105,81 @@ export interface GalleryItem {
   title: string;
 }
 
+export interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+}
+
 export interface FormField {
   id: string;
   label: string;
-  type: 'text' | 'email' | 'tel' | 'course-select' | 'textarea' | 'select';
+  type: 'text' | 'email' | 'tel' | 'date' | 'course-select' | 'textarea' | 'select';
   placeholder: string;
   required: boolean;
-  options?: string[]; // For custom select types
+  options?: string[];
+}
+
+export interface RoadmapStep {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface AppState {
+  site: SiteConfig;
+  home: HomeConfig;
+  courses: Course[];
+  notices: Notice[];
+  gallery: GalleryItem[];
+  faqs: FAQItem[];
+  galleryMetadata?: Record<string, string>;
+  enrollmentForm: {
+    title: string;
+    description: string;
+    successTitle: string;
+    successMessage: string;
+    roadmapTitle: string;
+    roadmapSteps: RoadmapStep[];
+    fields: FormField[];
+  };
+  about: {
+    intro: string;
+    mission: string;
+    vision: string;
+    timeline: Array<{ year: string; event: string; }>;
+  };
+  placements: {
+    stats: PlacementStat[];
+    reviews: StudentReview[];
+    partners: IndustryPartner[];
+    pageDescription: string;
+  };
+  legal: {
+    privacy: {
+      title: string;
+      subtitle: string;
+      sections: LegalSection[];
+    };
+    terms: {
+      title: string;
+      subtitle: string;
+      sections: LegalSection[];
+    };
+  };
+  career: {
+    hero: {
+      title: string;
+      subtitle: string;
+      bgImage?: string;
+    };
+    services: CareerService[];
+    cta: {
+      title: string;
+      subtitle: string;
+    };
+  };
 }
 
 export interface PlacementStat {
@@ -152,54 +220,4 @@ export interface CareerService {
   description: string;
   icon: string;
   image?: string;
-}
-
-export interface AppState {
-  site: SiteConfig;
-  home: HomeConfig;
-  courses: Course[];
-  notices: Notice[];
-  gallery: GalleryItem[];
-  galleryMetadata?: Record<string, string>;
-  enrollmentForm: {
-    title: string;
-    description: string;
-    fields: FormField[];
-  };
-  about: {
-    intro: string;
-    mission: string;
-    vision: string;
-    timeline: Array<{ year: string; event: string; }>;
-  };
-  placements: {
-    stats: PlacementStat[];
-    reviews: StudentReview[];
-    partners: IndustryPartner[];
-    pageDescription: string;
-  };
-  legal: {
-    privacy: {
-      title: string;
-      subtitle: string;
-      sections: LegalSection[];
-    };
-    terms: {
-      title: string;
-      subtitle: string;
-      sections: LegalSection[];
-    };
-  };
-  career: {
-    hero: {
-      title: string;
-      subtitle: string;
-      bgImage?: string;
-    };
-    services: CareerService[];
-    cta: {
-      title: string;
-      subtitle: string;
-    };
-  };
 }

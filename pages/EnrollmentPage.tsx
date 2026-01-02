@@ -12,7 +12,7 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>({});
 
-  const { enrollmentForm = { title: 'Application Form', description: '', fields: [] }, courses = [], site } = content;
+  const { enrollmentForm = { title: 'Application Form', description: '', roadmapTitle: 'Flow', roadmapSteps: [], fields: [], successTitle: 'Done', successMessage: 'Success' }, courses = [], site } = content;
 
   useEffect(() => {
     if (!enrollmentForm?.fields) return;
@@ -41,9 +41,9 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
           <div className="w-24 h-24 md:w-28 md:h-28 bg-emerald-100 text-emerald-600 rounded-[2.5rem] flex items-center justify-center text-4xl md:text-5xl mx-auto mb-10 shadow-2xl animate-bounce">
             <i className="fa-solid fa-check" aria-hidden="true"></i>
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tighter">Application Sent</h2>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tighter">{enrollmentForm.successTitle}</h2>
           <p className="text-slate-600 mb-12 text-lg md:text-xl font-medium leading-relaxed">
-            Your registration is being processed. An institutional registrar will review your application and contact you within 48 business hours.
+            {enrollmentForm.successMessage}
           </p>
           <Link to="/courses" className="inline-block px-12 py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-900/20 transition-all shadow-3xl active:scale-95 uppercase tracking-widest text-[11px]">
             Return to Courses
@@ -55,11 +55,11 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
+      {/* Header - Fully Customizable */}
       <section className="bg-slate-900 pt-32 pb-24 text-white relative overflow-hidden text-center">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl opacity-30"></div>
         <div className="container mx-auto px-4 relative z-10 max-w-4xl">
-          <span className="text-emerald-500 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Official Enrollment 2024</span>
+          <span className="text-emerald-500 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">Institutional Enrollment</span>
           <h1 className="text-4xl md:text-7xl font-black mb-8 tracking-tighter leading-none">{enrollmentForm.title}</h1>
           <p className="text-slate-300 text-lg md:text-xl font-medium max-w-2xl mx-auto">{enrollmentForm.description}</p>
         </div>
@@ -68,40 +68,31 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
       <div className="container mx-auto px-4 -mt-10 relative z-20 pb-32">
         <div className="max-w-6xl mx-auto bg-white rounded-[3rem] shadow-3xl border border-slate-100 overflow-hidden flex flex-col lg:flex-row">
           
-          {/* Enhanced Professional Side Roadmap */}
+          {/* Side Roadmap - Fully Customizable */}
           <div className="bg-slate-900 lg:w-96 p-10 md:p-14 text-white shrink-0 relative">
             <div className="relative z-10">
               <h3 className="text-xl md:text-2xl font-black mb-12 text-white uppercase tracking-tighter border-b border-white/5 pb-6">
-                Admission <span className="text-emerald-500">Flow</span>
+                {enrollmentForm.roadmapTitle}
               </h3>
               
               <div className="relative space-y-12">
-                {/* Connecting Line */}
                 <div className="absolute left-[23px] top-2 bottom-2 w-px bg-gradient-to-b from-emerald-500 via-slate-700 to-slate-800 hidden md:block" aria-hidden="true"></div>
 
-                <div className="relative flex gap-8 group">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg shrink-0 shadow-[0_0_25px_rgba(16,185,129,0.35)] relative z-20 border border-emerald-400/30">1</div>
-                  <div className="flex-grow pt-1">
-                    <h4 className="font-black text-lg uppercase tracking-tight text-white group-hover:text-emerald-400 transition-colors">Identity Submission</h4>
-                    <p className="text-sm text-slate-400 mt-2 font-medium leading-relaxed">Provide verifiable academic and personal records for initial screening.</p>
+                {enrollmentForm.roadmapSteps.map((step, idx) => (
+                  <div key={step.id} className="relative flex gap-8 group">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-lg shrink-0 shadow-[0_0_25px_rgba(16,185,129,0.35)] relative z-20 border border-emerald-400/30">
+                      {idx + 1}
+                    </div>
+                    <div className="flex-grow pt-1">
+                      <h4 className="font-black text-lg uppercase tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+                        {step.title}
+                      </h4>
+                      <p className="text-sm text-slate-400 mt-2 font-medium leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-
-                <div className="relative flex gap-8 group">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center font-black text-lg shrink-0 relative z-20 border border-slate-700 group-hover:border-emerald-500/50 transition-all">2</div>
-                  <div className="flex-grow pt-1">
-                    <h4 className="font-black text-lg uppercase tracking-tight text-slate-200">Institutional Review</h4>
-                    <p className="text-sm text-slate-400 mt-2 font-medium leading-relaxed">Specialists evaluate your alignment with the chosen program track.</p>
-                  </div>
-                </div>
-
-                <div className="relative flex gap-8 group">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center font-black text-lg shrink-0 relative z-20 border border-slate-700 group-hover:border-emerald-500/50 transition-all">3</div>
-                  <div className="flex-grow pt-1">
-                    <h4 className="font-black text-lg uppercase tracking-tight text-slate-200">Confirmation</h4>
-                    <p className="text-sm text-slate-400 mt-2 font-medium leading-relaxed">Official admission offer and joining protocols sent via advisor call.</p>
-                  </div>
-                </div>
+                ))}
               </div>
 
               <div className="mt-20 p-8 bg-white/[0.03] backdrop-blur-sm rounded-[2.5rem] border border-white/5 text-center group hover:bg-white/[0.05] transition-all">
@@ -112,63 +103,84 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
                 <p className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors">{site.contact.phone}</p>
               </div>
             </div>
-            
-            {/* Subtle background element */}
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-emerald-600/5 rounded-full blur-[80px] -mr-32 -mb-32"></div>
           </div>
 
           {/* Form Content */}
           <div className="flex-grow p-10 md:p-16 lg:p-20">
             <form onSubmit={handleSubmit} className="space-y-8 md:space-y-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 md:gap-y-10">
-                {enrollmentForm.fields?.map(field => (
-                  <div key={field.id} className={`space-y-3 ${field.type === 'textarea' ? 'md:col-span-2' : ''}`}>
-                    <label htmlFor={`field-${field.id}`} className="text-[11px] font-black text-slate-800 uppercase tracking-[0.2em] ml-1 block">
-                      {field.label} {field.required && <span className="text-emerald-600 font-black" aria-hidden="true">*</span>}
-                      {field.required && <span className="sr-only">(Required)</span>}
-                    </label>
-                    
-                    {field.type === 'textarea' ? (
-                      <textarea 
-                        id={`field-${field.id}`}
-                        required={field.required}
-                        value={formData[field.id] || ''}
-                        onChange={(e) => handleChange(field.id, e.target.value)}
-                        rows={5}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-medium text-slate-900 resize-none placeholder-slate-400"
-                        placeholder={field.placeholder}
-                      />
-                    ) : field.type === 'course-select' ? (
-                      <div className="relative">
-                        <select 
+                {enrollmentForm.fields?.map(field => {
+                  // Standard web logic: Address and Big Boxes take 2 cols. PIN/City/State take 1 col.
+                  const isWide = field.type === 'textarea' || field.label.toLowerCase().includes('name');
+                  
+                  return (
+                    <div key={field.id} className={`space-y-3 ${isWide ? 'md:col-span-2' : 'md:col-span-1'}`}>
+                      <label htmlFor={`field-${field.id}`} className="text-[11px] font-black text-slate-800 uppercase tracking-[0.2em] ml-1 block">
+                        {field.label} {field.required && <span className="text-emerald-600 font-black" aria-hidden="true">*</span>}
+                      </label>
+                      
+                      {field.type === 'textarea' ? (
+                        <textarea 
                           id={`field-${field.id}`}
                           required={field.required}
                           value={formData[field.id] || ''}
                           onChange={(e) => handleChange(field.id, e.target.value)}
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-black text-[11px] text-slate-900 uppercase tracking-widest appearance-none pr-12"
-                        >
-                          <option value="">{field.placeholder || 'Select Track'}</option>
-                          {courses.filter(c => c.status === 'Active').map(course => (
-                            <option key={course.id} value={course.name}>{course.name}</option>
-                          ))}
-                        </select>
-                        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                          <i className="fa-solid fa-chevron-down text-xs"></i>
+                          rows={field.id.includes('remarks') || field.id.includes('additional') ? 8 : 4}
+                          className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-medium text-slate-900 resize-none placeholder-slate-400 shadow-sm"
+                          placeholder={field.placeholder}
+                        />
+                      ) : field.type === 'course-select' ? (
+                        <div className="relative">
+                          <select 
+                            id={`field-${field.id}`}
+                            required={field.required}
+                            value={formData[field.id] || ''}
+                            onChange={(e) => handleChange(field.id, e.target.value)}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-black text-[11px] text-slate-900 uppercase tracking-widest appearance-none pr-12 shadow-sm cursor-pointer"
+                          >
+                            <option value="">{field.placeholder || 'Select Track'}</option>
+                            {courses.filter(c => c.status === 'Active').map(course => (
+                              <option key={course.id} value={course.name}>
+                                {course.name} {course.price ? ` — ${course.price}` : ''}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <i className="fa-solid fa-chevron-down text-xs"></i>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <input 
-                        id={`field-${field.id}`}
-                        required={field.required}
-                        type={field.type}
-                        value={formData[field.id] || ''}
-                        onChange={(e) => handleChange(field.id, e.target.value)}
-                        className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-medium text-slate-900 placeholder-slate-400"
-                        placeholder={field.placeholder}
-                      />
-                    )}
-                  </div>
-                ))}
+                      ) : field.type === 'select' ? (
+                        <div className="relative">
+                          <select 
+                            id={`field-${field.id}`}
+                            required={field.required}
+                            value={formData[field.id] || ''}
+                            onChange={(e) => handleChange(field.id, e.target.value)}
+                            className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-black text-[11px] text-slate-900 uppercase tracking-widest appearance-none pr-12 shadow-sm cursor-pointer"
+                          >
+                            <option value="">{field.placeholder || 'Choose Option'}</option>
+                            {field.options?.map(opt => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <i className="fa-solid fa-chevron-down text-xs"></i>
+                          </div>
+                        </div>
+                      ) : (
+                        <input 
+                          id={`field-${field.id}`}
+                          required={field.required}
+                          type={field.type}
+                          value={formData[field.id] || ''}
+                          onChange={(e) => handleChange(field.id, e.target.value)}
+                          className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:outline-none focus:border-emerald-500 transition-all font-medium text-slate-900 placeholder-slate-400 shadow-sm"
+                          placeholder={field.placeholder}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               <div className="space-y-6">
@@ -178,13 +190,6 @@ const EnrollmentPage: React.FC<EnrollmentPageProps> = ({ content }) => {
 
                 <p className="text-[11px] text-slate-500 font-medium text-center leading-relaxed max-w-lg mx-auto">
                   By submitting this application, you acknowledge that you have read and agree to our <Link to="/privacy-policy" className="text-emerald-600 font-black hover:underline">Privacy Policy</Link> and <Link to="/terms-of-service" className="text-emerald-600 font-black hover:underline">Terms of Service</Link>.
-                </p>
-              </div>
-
-              <div className="pt-10 border-t border-slate-100 text-center">
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3">
-                  <i className="fa-solid fa-shield-halved text-emerald-500"></i>
-                  Formal Submission Secured by Institutional Protocols
                 </p>
               </div>
             </form>
