@@ -1,4 +1,5 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   /**
@@ -15,11 +16,12 @@ interface State {
  * Global Error Boundary component to protect the application from 
  * total crashes during runtime rendering exceptions.
  */
-// Use React.Component with explicit generic types to ensure the compiler recognizes inherited properties
-export default class ErrorBoundary extends React.Component<Props, State> {
-  // Fix for line 22: Initializing state as a class property rather than in a constructor 
-  // to avoid specific TypeScript issues with inherited property access.
-  public state: State = { hasError: false };
+export default class ErrorBoundary extends Component<Props, State> {
+  /* Added constructor to explicitly initialize super(props) and fix TS issues with 'this.props' */
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
   public static getDerivedStateFromError(_: Error): State {
     // Update state so the next render will show the fallback UI.
@@ -32,7 +34,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
   }
 
   public render(): ReactNode {
-    // Fix for line 37: Correctly accessing 'state' inherited from React.Component
+    // Standard access to state and props in React class components
     if (this.state.hasError) {
       // Minimal, neutral fallback UI using existing global Tailwind and FontAwesome
       return (
@@ -56,7 +58,6 @@ export default class ErrorBoundary extends React.Component<Props, State> {
       );
     }
 
-    // Fix for line 61: Correctly accessing 'props' inherited from React.Component
     return this.props.children;
   }
 }

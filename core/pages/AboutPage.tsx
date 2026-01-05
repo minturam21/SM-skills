@@ -9,7 +9,7 @@ interface AboutPageProps {
 }
 
 const AboutPage: React.FC<AboutPageProps> = ({ content, siteName }) => {
-  const { beginning, learning, faculty, vision, achievements } = content;
+  const { beginning, learning, faculty, vision, achievements, extraChapters } = content;
 
   return (
     <div className="bg-white overflow-hidden">
@@ -133,8 +133,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ content, siteName }) => {
                <span className="text-emerald-600 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{achievements.label}</span>
                <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-10 tracking-tight">{achievements.title}</h2>
                <div className="space-y-12">
-                 {achievements.stats.map((stat, idx) => (
-                   <div key={idx} className="flex items-end gap-6 group">
+                 {(achievements.stats || []).map((stat) => (
+                   <div key={stat.id} className="flex items-end gap-6 group">
                      <span className="text-5xl md:text-7xl font-black text-slate-900 leading-none tracking-tighter group-hover:text-emerald-600 transition-colors">{stat.value}</span>
                      <div className="pb-1">
                         <div className="h-px w-12 bg-slate-200 mb-2"></div>
@@ -152,6 +152,28 @@ const AboutPage: React.FC<AboutPageProps> = ({ content, siteName }) => {
           </div>
         </div>
       </section>
+
+      {/* Dynamic Extra Chapters */}
+      {(extraChapters || []).map((ch, idx) => (
+        <section key={ch.id} className={`py-24 md:py-32 ${idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}`}>
+          <div className="container mx-auto px-4">
+            <div className={`flex flex-col items-center gap-16 ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}>
+              <div className="lg:w-1/2">
+                 <span className="text-emerald-600 font-black uppercase tracking-[0.4em] text-[10px] mb-4 block">{ch.label}</span>
+                 <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tighter leading-tight">{ch.title}</h2>
+                 <p className="text-slate-600 text-lg md:text-xl leading-relaxed font-medium mb-12 whitespace-pre-line">{ch.story}</p>
+                 <div className="w-20 h-1.5 bg-emerald-500 rounded-full"></div>
+              </div>
+              <div className="lg:w-1/2">
+                <div className="relative group">
+                  <div className="absolute -inset-4 bg-emerald-100/30 rounded-[3rem] -z-10 group-hover:rotate-0 transition-transform duration-700 rotate-2"></div>
+                  <img src={ch.image} className="w-full h-[400px] md:h-[500px] object-cover rounded-[2.5rem] shadow-2xl" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))}
     </div>
   );
 };

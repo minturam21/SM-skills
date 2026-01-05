@@ -104,6 +104,22 @@ export interface TeamMember {
   image: string;
 }
 
+// Added AchievementStat interface
+export interface AchievementStat {
+  id: string;
+  label: string;
+  value: string;
+}
+
+// Added ExtraChapter interface
+export interface ExtraChapter {
+  id: string;
+  label: string;
+  title: string;
+  story: string;
+  image: string;
+}
+
 export interface AboutState {
   beginning: {
     label: string;
@@ -137,9 +153,12 @@ export interface AboutState {
     label: string;
     title: string;
     image: string;
-    stats: Array<{ label: string; value: string }>;
+    // Updated stats to use AchievementStat[]
+    stats: AchievementStat[];
     ctaLabel: string;
   };
+  // Added extraChapters property
+  extraChapters: ExtraChapter[];
 }
 
 export interface Course {

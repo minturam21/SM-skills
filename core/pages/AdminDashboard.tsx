@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { AppState, Course, Notice, FAQItem, FormField, PlacementStat, StudentReview, IndustryPartner, LegalSection, CareerService, CustomPage, TeamMember, PageMeta, SocialLink } from '../types.ts';
+import { AppState, Course, Notice, FAQItem, FormField, PlacementStat, StudentReview, IndustryPartner, LegalSection, CareerService, CustomPage, TeamMember, PageMeta, SocialLink, AchievementStat, ExtraChapter } from '../types.ts';
 import { INITIAL_CONTENT } from '../data/defaultContent.ts';
 import { optimizeImage } from '../utils/imageOptimizer.ts';
 
@@ -117,6 +118,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
              current.members = current.members.map((m: any) => m.id === memberId ? { ...m, image: url } : m);
              return next;
           }
+          if (pathParts[i] === 'extraChapters' && Array.isArray(current.extraChapters)) {
+             const chapterId = pathParts[i+1];
+             current.extraChapters = current.extraChapters.map((ch: any) => ch.id === chapterId ? { ...ch, image: url } : ch);
+             return next;
+          }
           current = current[pathParts[i]];
         }
         current[pathParts[pathParts.length - 1]] = url;
@@ -200,10 +206,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ content, onUpdate }) =>
              addTeamMember={() => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, faculty: { ...prev.about.faculty, members: [...prev.about.faculty.members, { id: Date.now().toString(), name: 'New Faculty', role: 'Mentor', bio: 'Expertise...', image: 'https://i.pravatar.cc/150' }] } } })); trackChange(); }}
              updateTeamMember={(id, f, v) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, faculty: { ...prev.about.faculty, members: prev.about.faculty.members.map(m => m.id === id ? { ...m, [f]: v } : m) } } })); trackChange(); }}
              removeTeamMember={(id) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, faculty: { ...prev.about.faculty, members: prev.about.faculty.members.filter(m => m.id !== id) } } })); trackChange(); }}
-             updateStats={(idx, f, v) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, achievements: { ...prev.about.achievements, stats: prev.about.achievements.stats.map((s, i) => i === idx ? { ...s, [f]: v } : s) } } })); trackChange(); }}
+             updateStats={(id, f, v) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, achievements: { ...prev.about.achievements, stats: (prev.about.achievements.stats || []).map(s => s.id === id ? { ...s, [f]: v } : s) } } })); trackChange(); }}
+             addStat={() => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, achievements: { ...prev.about.achievements, stats: [...(prev.about.achievements.stats || []), { id: Date.now().toString(), label: 'New Metric', value: '100%' }] } } })); trackChange(); }}
+             removeStat={(id) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, achievements: { ...prev.about.achievements, stats: (prev.about.achievements.stats || []).filter(s => s.id !== id) } } })); trackChange(); }}
              updateValues={(idx, v) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, vision: { ...prev.about.vision, values: prev.about.vision.values.map((val, i) => i === idx ? v : val) } } })); trackChange(); }}
              addValue={() => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, vision: { ...prev.about.vision, values: [...prev.about.vision.values, 'New Value'] } } })); trackChange(); }}
              removeValue={(idx) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, vision: { ...prev.about.vision, values: prev.about.vision.values.filter((_, i) => i !== idx) } } })); trackChange(); }}
+             addExtraChapter={() => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, extraChapters: [...(prev.about.extraChapters || []), { id: Date.now().toString(), label: 'Chapter New', title: 'New Topic', story: '', image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655' }] } })); trackChange(); }}
+             updateExtraChapter={(id, f, v) => { setLocalContent(prev => ({ ...prev, about: { ...prev.about, extraChapters: prev.about.extraChapters.map(ch => ch.id === id ? { ...ch, [f]: v } : ch) } })); trackChange(); }}
+             removeExtraChapter={(id) => { if(window.confirm('Delete this chapter?')) setLocalContent(prev => ({ ...prev, about: { ...prev.about, extraChapters: prev.about.extraChapters.filter(ch => ch.id !== id) } })); trackChange(); }}
           />}
 
           {activeTab === 'form' && <FormTab 

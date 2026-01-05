@@ -41,6 +41,12 @@ export const INITIAL_CONTENT: AppState = {
       ]
     }
   },
+  theme: {
+    primary: "#059669",
+    secondary: "#0f172a",
+    accent: "#10b981",
+    radius: "large"
+  },
   home: {
     hero: {
       title: "Master Skills for the Modern Industry",
@@ -97,8 +103,13 @@ export const INITIAL_CONTENT: AppState = {
       gallery: true,
       contact: true,
       industryTieups: true,
-      placementReviews: true
-    }
+      placementReviews: true,
+      // Added missing highlights and bigShowcase properties
+      highlights: true,
+      bigShowcase: true
+    },
+    // Added missing sectionOrder
+    sectionOrder: ["highlights", "industryTieups", "placementReviews", "notices", "featuredCourses", "bigShowcase"]
   },
   enrollmentForm: {
     title: "SMS Official Enrollment",
@@ -129,42 +140,103 @@ export const INITIAL_CONTENT: AppState = {
       { id: "f12", label: "Additional Questions / Remarks", type: "textarea", placeholder: "Any specific queries for the registrar?", required: false }
     ]
   },
-  courses: [
-    {
-      id: "1",
-      name: "Software Architecture",
-      duration: "12 Months",
-      mode: "Offline",
-      description: "Comprehensive training on distributed systems and cloud-native engineering.",
-      status: "Active",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
-      price: "$2,200"
-    }
-  ],
-  notices: [
-    {
-      id: "n1",
-      date: "2024-06-01",
-      title: "Summer 2024 Intake Open",
-      description: "Secure your place in our flagship engineering and design programs.",
-      isImportant: true,
-      category: 'New'
-    }
-  ],
-  gallery: [],
-  faqs: [
-    { id: "q1", question: "What is the admission criteria?", answer: "We look for a basic technical aptitude and a passion for learning. Previous experience is not mandatory for foundation tracks.", category: "Admissions" },
-    { id: "q2", question: "Do you provide job assistance?", answer: "Yes, our Placement Cell works with 200+ global partners to ensure high-quality career launches for our graduates.", category: "Placements" }
-  ],
-  about: {
-    intro: "SM Skills Training Institute (SMS) was founded in 2024 with a mission to modernize technical education through practical, industry-first curricula.",
-    mission: "To empower students with the exact skills required by top global employers.",
-    vision: "To be the most trusted name in professional skill development and career launching.",
-    timeline: [
-      { year: "2024", event: "SM Skills Campus Launch" }
+  contactForm: {
+    title: "Send Enquiry",
+    fields: [
+      { id: "c1", label: "Full Name", type: "text", placeholder: "e.g. John Doe", required: true },
+      { id: "c2", label: "Email Address", type: "email", placeholder: "john@institute.edu", required: true },
+      { id: "c3", label: "Course Track", type: "course-select", placeholder: "Select Track", required: false },
+      { id: "c4", label: "Detailed Message", type: "textarea", placeholder: "How can we help you?", required: true }
     ]
   },
+  // Updated courses to object structure
+  courses: {
+    list: [
+      {
+        id: "1",
+        name: "Software Architecture",
+        duration: "12 Months",
+        mode: "Offline",
+        description: "Comprehensive training on distributed systems and cloud-native engineering.",
+        status: "Active",
+        image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800",
+        price: "$2,200"
+      }
+    ],
+    pageMeta: { title: "Vocational Programs", subtitle: "Curated learning paths focused on high-demand professional skills." }
+  },
+  // Updated notices to object structure
+  notices: {
+    list: [
+      {
+        id: "n1",
+        date: "2024-06-01",
+        title: "Summer 2024 Intake Open",
+        description: "Secure your place in our flagship engineering and design programs.",
+        isImportant: true,
+        category: 'New'
+      }
+    ],
+    pageMeta: { title: "Institute Feed", subtitle: "Recent announcements regarding batches, events, and scholarships." }
+  },
+  // Updated gallery to object structure
+  gallery: {
+    list: [],
+    pageMeta: { title: "Campus Life", subtitle: "Explore our facilities, classroom interactions, and achievement galleries." }
+  },
+  // Updated faqs to object structure
+  faqs: {
+    list: [
+      { id: "q1", question: "What is the admission criteria?", answer: "We look for a basic technical aptitude and a passion for learning. Previous experience is not mandatory for foundation tracks.", category: "Admissions" },
+      { id: "q2", question: "Do you provide job assistance?", answer: "Yes, our Placement Cell works with 200+ global partners to ensure high-quality career launches for our graduates.", category: "Placements" }
+    ],
+    pageMeta: { title: "Frequently Asked Questions", subtitle: "Common queries regarding our institute." }
+  },
+  // Updated about to AboutState structure
+  about: {
+    beginning: {
+      label: "Chapter 01 — Our Genesis",
+      title: "Our Foundations",
+      story: "Founded in 2024, S M Skills was born out of a critical observation: the widening gap between traditional academic knowledge and the rapidly evolving demands of the modern workforce.",
+      image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=1200"
+    },
+    learning: {
+      label: "Chapter 02 — Methodology",
+      title: "Learning by Doing",
+      description: "We abandon the 'lecture-only' model. Here, learning happens through rigorous project-based simulations.",
+      image1: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&q=80&w=800",
+      image2: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800",
+      caption1: "Collaborative project review sessions.",
+      caption2: "Practical labs led by industry veterans."
+    },
+    faculty: {
+      label: "Chapter 03 — Mentors",
+      title: "Taught by Practitioners",
+      description: "Our mentors are industry veterans.",
+      members: []
+    },
+    vision: {
+      label: "Chapter 04 — Core DNA",
+      title: "Vision & Values",
+      content: "To be the most trusted name in professional skill development and career launching.",
+      values: ["Consistency", "Relentless Skill Development", "Institutional Integrity"],
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200"
+    },
+    achievements: {
+      label: "Chapter 05 — Proof of Excellence",
+      title: "Milestones",
+      image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200",
+      stats: [
+        { id: "a1", label: "Placement Rate", value: "94%" }
+      ],
+      ctaLabel: "Begin Application"
+    },
+    extraChapters: []
+  },
   placements: {
+    // Added missing pageMeta and wallTitle
+    pageMeta: { title: "Success Stories", subtitle: "Celebrating SM Skills graduates who have joined industry-leading organizations." },
+    wallTitle: "Our Placement Record",
     pageDescription: "SM Skills graduates are consistently hired by the world's most innovative companies.",
     stats: [
       { id: "s1", label: "Average Hike", value: "85%", icon: "fa-chart-line" },
@@ -206,6 +278,8 @@ export const INITIAL_CONTENT: AppState = {
     }
   },
   career: {
+    // Added missing pageMeta
+    pageMeta: { title: "Career Guidance", subtitle: "Success roadmap with industry vets." },
     hero: {
       title: "Career Lab",
       subtitle: "Interview prep with industry vets.",
@@ -218,5 +292,6 @@ export const INITIAL_CONTENT: AppState = {
       title: "Ready for Launch?",
       subtitle: "Schedule a session."
     }
-  }
+  },
+  customPages: []
 };
