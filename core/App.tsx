@@ -46,7 +46,12 @@ const App: React.FC = () => {
         return result;
       };
 
-      // Force structure for list-based sections to prevent legacy data crashes
+      // Construct verified FAQ state
+      const verifiedFaqs = {
+        list: (parsed.faqs && Array.isArray(parsed.faqs.list)) ? parsed.faqs.list : INITIAL_CONTENT.faqs.list,
+        pageMeta: parsed.faqs?.pageMeta ? deepMerge(INITIAL_CONTENT.faqs.pageMeta, parsed.faqs.pageMeta) : INITIAL_CONTENT.faqs.pageMeta
+      };
+
       const mergedState: AppState = {
         ...INITIAL_CONTENT,
         site: deepMerge(INITIAL_CONTENT.site, parsed.site),
@@ -70,18 +75,14 @@ const App: React.FC = () => {
           list: parsed.gallery?.list || (Array.isArray(parsed.gallery) ? parsed.gallery : INITIAL_CONTENT.gallery.list),
           pageMeta: deepMerge(INITIAL_CONTENT.gallery.pageMeta, parsed.gallery?.pageMeta)
         },
-        faqs: {
-          // Hardened merge: ensure we always have an object with a list array
-          list: (parsed.faqs?.list || (Array.isArray(parsed.faqs) ? parsed.faqs : null)) || INITIAL_CONTENT.faqs.list,
-          pageMeta: deepMerge(INITIAL_CONTENT.faqs.pageMeta, parsed.faqs?.pageMeta)
-        },
+        faqs: verifiedFaqs,
         customPages: parsed.customPages || INITIAL_CONTENT.customPages,
         galleryMetadata: parsed.galleryMetadata || INITIAL_CONTENT.galleryMetadata
       };
 
       return mergedState;
     } catch (e) {
-      console.error("Educational CMS: System restoration failed.", e);
+      console.error("Educational CMS: Error restoring state.", e);
       return INITIAL_CONTENT;
     }
   });
@@ -119,7 +120,7 @@ const App: React.FC = () => {
     try {
       localStorage.setItem('edu_insta_content', JSON.stringify(newContent));
     } catch (err) {
-      console.error("Educational CMS: Persistence failed", err);
+      console.error("Educational CMS: Failed to save", err);
     }
   };
 

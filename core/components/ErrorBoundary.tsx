@@ -15,8 +15,8 @@ interface State {
  * Global Error Boundary component to protect the application from 
  * total crashes during runtime rendering exceptions.
  */
-// Using React.Component explicitly to ensure the compiler recognizes inherited properties like 'props' and 'state'
-export default class ErrorBoundary extends React.Component<Props, State> {
+// Fix: Extending 'Component' directly ensures TypeScript correctly inherits properties like 'props' and 'state'
+export default class ErrorBoundary extends Component<Props, State> {
   public state: State = { hasError: false };
 
   public static getDerivedStateFromError(_: Error): State {
@@ -54,7 +54,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
       );
     }
 
-    // Fix: Using this.props correctly within the render method of a class component
+    // Fix: Access children through the inherited props property
     return this.props.children || null;
   }
 }
