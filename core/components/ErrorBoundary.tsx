@@ -1,4 +1,3 @@
-
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
@@ -16,7 +15,7 @@ interface State {
  * Global Error Boundary component to protect the application from 
  * total crashes during runtime rendering exceptions.
  */
-export default class ErrorBoundary extends Component<Props, State> {
+export default class ErrorBoundary extends React.Component<Props, State> {
   public state: State = { hasError: false };
 
   public static getDerivedStateFromError(_: Error): State {
@@ -54,6 +53,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       );
     }
 
+    /* Fixed: Standard access to props in React class components, ensuring children are returned correctly */
     return this.props.children;
   }
 }
