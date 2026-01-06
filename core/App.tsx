@@ -46,15 +46,34 @@ const App: React.FC = () => {
         return result;
       };
 
-      // Construct verified FAQ state
-      const verifiedFaqs = {
-        list: (parsed.faqs && Array.isArray(parsed.faqs.list)) ? parsed.faqs.list : INITIAL_CONTENT.faqs.list,
-        pageMeta: parsed.faqs?.pageMeta ? deepMerge(INITIAL_CONTENT.faqs.pageMeta, parsed.faqs.pageMeta) : INITIAL_CONTENT.faqs.pageMeta
+      /**
+       * Fixed: Added : any return type to avoid union type mismatch errors when assigning to specific AppState properties.
+       * Also used (INITIAL_CONTENT as any)[key] to safely access default content.
+       */
+      const migrateList = (key: string, defaultMeta: any): any => {
+        const val = parsed[key];
+        if (Array.isArray(val)) {
+          return { list: val, pageMeta: defaultMeta };
+        }
+        if (val && typeof val === 'object' && val.list) {
+          return {
+            list: val.list,
+            pageMeta: deepMerge(defaultMeta, val.pageMeta)
+          };
+        }
+        return (INITIAL_CONTENT as any)[key] || { list: [], pageMeta: defaultMeta };
       };
+
+      // NAVIGATION RECONCILIATION: Ensure FAQ link exists in the navigation array
+      const baseSite = deepMerge(INITIAL_CONTENT.site, parsed.site);
+      const hasFaq = baseSite.navigation.some((n: any) => n.path === '/faq');
+      if (!hasFaq) {
+        baseSite.navigation.push({ label: "FAQ", path: "/faq" });
+      }
 
       const mergedState: AppState = {
         ...INITIAL_CONTENT,
-        site: deepMerge(INITIAL_CONTENT.site, parsed.site),
+        site: baseSite,
         theme: deepMerge(INITIAL_CONTENT.theme, parsed.theme),
         home: deepMerge(INITIAL_CONTENT.home, parsed.home),
         about: deepMerge(INITIAL_CONTENT.about, parsed.about),
@@ -63,19 +82,11 @@ const App: React.FC = () => {
         placements: deepMerge(INITIAL_CONTENT.placements, parsed.placements),
         legal: deepMerge(INITIAL_CONTENT.legal, parsed.legal),
         career: deepMerge(INITIAL_CONTENT.career, parsed.career),
-        courses: {
-          list: parsed.courses?.list || (Array.isArray(parsed.courses) ? parsed.courses : INITIAL_CONTENT.courses.list),
-          pageMeta: deepMerge(INITIAL_CONTENT.courses.pageMeta, parsed.courses?.pageMeta)
-        },
-        notices: {
-          list: parsed.notices?.list || (Array.isArray(parsed.notices) ? parsed.notices : INITIAL_CONTENT.notices.list),
-          pageMeta: deepMerge(INITIAL_CONTENT.notices.pageMeta, parsed.notices?.pageMeta)
-        },
-        gallery: {
-          list: parsed.gallery?.list || (Array.isArray(parsed.gallery) ? parsed.gallery : INITIAL_CONTENT.gallery.list),
-          pageMeta: deepMerge(INITIAL_CONTENT.gallery.pageMeta, parsed.gallery?.pageMeta)
-        },
-        faqs: verifiedFaqs,
+        // Applying migrations
+        courses: migrateList('courses', INITIAL_CONTENT.courses.pageMeta),
+        notices: migrateList('notices', INITIAL_CONTENT.notices.pageMeta),
+        gallery: migrateList('gallery', INITIAL_CONTENT.gallery.pageMeta),
+        faqs: migrateList('faqs', INITIAL_CONTENT.faqs.pageMeta),
         customPages: parsed.customPages || INITIAL_CONTENT.customPages,
         galleryMetadata: parsed.galleryMetadata || INITIAL_CONTENT.galleryMetadata
       };

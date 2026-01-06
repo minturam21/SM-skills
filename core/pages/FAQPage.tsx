@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { AppState, SiteConfig, FAQItem } from '../types.ts';
 import { INITIAL_CONTENT } from '../data/defaultContent.ts';
@@ -12,14 +12,17 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
-  // Direct data resolution with zero-dependency fallbacks
-  const list: FAQItem[] = (faqsState && Array.isArray(faqsState.list)) 
-    ? faqsState.list 
-    : INITIAL_CONTENT.faqs.list;
+  // DATA RESILIENCE LAYER: Determine actual list and meta regardless of data shape
+  const list = useMemo((): FAQItem[] => {
+    if (Array.isArray(faqsState)) return faqsState;
+    if (faqsState && Array.isArray(faqsState.list)) return faqsState.list;
+    return INITIAL_CONTENT.faqs.list;
+  }, [faqsState]);
 
-  const meta = (faqsState && faqsState.pageMeta) 
-    ? faqsState.pageMeta 
-    : INITIAL_CONTENT.faqs.pageMeta;
+  const meta = useMemo(() => {
+    if (Array.isArray(faqsState) || !faqsState) return INITIAL_CONTENT.faqs.pageMeta;
+    return faqsState.pageMeta || INITIAL_CONTENT.faqs.pageMeta;
+  }, [faqsState]);
 
   const toggleItem = (id: string) => {
     const next = new Set(openItems);
@@ -29,12 +32,11 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
   };
 
   const filteredFaqs = list.filter(faq => {
-    if (!faq) return false;
-    const term = searchTerm.toLowerCase();
+    const s = searchTerm.toLowerCase();
     return (
-      (faq.question || '').toLowerCase().includes(term) ||
-      (faq.answer || '').toLowerCase().includes(term) ||
-      (faq.category || '').toLowerCase().includes(term)
+      (faq.question || '').toLowerCase().includes(s) ||
+      (faq.answer || '').toLowerCase().includes(s) ||
+      (faq.category || '').toLowerCase().includes(s)
     );
   });
 
@@ -43,7 +45,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Dynamic Header */}
+      {/* Header Section */}
       <section className="bg-slate-900 pt-32 pb-24 text-white relative overflow-hidden text-center">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
         <div className="container mx-auto px-4 relative z-10 max-w-4xl">
@@ -54,7 +56,7 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
             {meta.title || 'Help Center'}
           </h1>
           <p className="text-slate-400 text-xl font-medium max-w-2xl mx-auto">
-            {meta.subtitle || 'Frequently Asked Questions'}
+            {meta.subtitle || 'Find answers to common questions about enrollment, curriculum, and placement services.'}
           </p>
           
           <div className="mt-12 max-w-2xl mx-auto relative group">
@@ -70,11 +72,10 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
         </div>
       </section>
 
-      {/* Main List Section */}
       <div className="container mx-auto px-4 py-20 max-w-4xl">
-        {filteredFaqs.length > 0 ? (
+        {categories.length > 0 ? (
           categories.map(category => {
-            const categoryFaqs = filteredFaqs.filter(f => f.category === category);
+            const categoryFaqs = filteredFaqs.filter(f => (f.category || 'General') === category);
             if (categoryFaqs.length === 0) return null;
 
             return (
@@ -88,9 +89,8 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
                         <button 
                           onClick={() => toggleItem(faq.id)}
                           className="w-full flex items-center justify-between p-8 text-left focus:outline-none group"
-                          aria-expanded={isOpen}
                         >
-                          <span className="text-lg md:text-xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors pr-8">
+                          <span className="text-lg md:text-xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors pr-8 leading-tight">
                             {faq.question}
                           </span>
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${isOpen ? 'bg-emerald-600 text-white rotate-45 shadow-lg' : 'bg-slate-50 text-slate-400 group-hover:bg-emerald-50'}`}>
@@ -98,13 +98,11 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
                           </div>
                         </button>
                         
-                        {isOpen && (
-                          <div className="border-t border-slate-50 bg-slate-50/30 animate-fade-in">
-                            <div className="p-8 md:p-10 text-slate-600 font-medium leading-relaxed text-lg">
-                              {faq.answer}
-                            </div>
+                        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isOpen ? 'max-h-[1000px] border-t border-slate-50' : 'max-h-0'}`}>
+                          <div className="p-8 md:p-10 text-slate-600 font-medium leading-relaxed text-lg">
+                            {faq.answer}
                           </div>
-                        )}
+                        </div>
                       </div>
                     );
                   })}
@@ -114,20 +112,26 @@ const FAQPage: React.FC<FAQPageProps> = ({ faqsState, contact }) => {
           })
         ) : (
           <div className="text-center py-32 bg-white rounded-[3rem] border border-dashed border-slate-200">
-            <div className="w-20 h-20 bg-slate-50 text-slate-200 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">
-              <i className="fa-solid fa-circle-question"></i>
-            </div>
-            <h3 className="text-2xl font-black text-slate-400 uppercase tracking-widest">No matching topics found</h3>
+            <i className="fa-solid fa-circle-question text-6xl text-slate-100 mb-6 block"></i>
+            <h3 className="text-2xl font-black text-slate-400 uppercase tracking-widest">Help Database Empty</h3>
+            <p className="text-slate-400 mt-2">Initialize FAQs in the administrator dashboard.</p>
+          </div>
+        )}
+
+        {filteredFaqs.length === 0 && list.length > 0 && (
+          <div className="text-center py-32 bg-white rounded-[3rem] border border-dashed border-slate-200">
+            <i className="fa-solid fa-magnifying-glass text-6xl text-slate-100 mb-6 block"></i>
+            <h3 className="text-2xl font-black text-slate-400 uppercase tracking-widest">No matching topics</h3>
             <button 
               onClick={() => setSearchTerm('')}
               className="mt-8 px-10 py-4 bg-emerald-600 text-white rounded-full font-black text-xs uppercase tracking-widest transition-all hover:bg-emerald-500 shadow-xl active:scale-95"
             >
-              Clear Search Filter
+              Clear Search
             </button>
           </div>
         )}
 
-        {/* Support Call-to-Action */}
+        {/* CTA Support Section */}
         <div className="mt-20 p-12 bg-slate-900 rounded-[3rem] text-center text-white relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl group-hover:scale-125 transition-transform pointer-events-none"></div>
           <h3 className="text-3xl font-black mb-4 relative z-10">Still have questions?</h3>
