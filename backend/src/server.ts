@@ -1,4 +1,5 @@
-import process from 'process';
+// Fix: Use node:process to ensure the compiler correctly identifies Node.js runtime methods
+import process from 'node:process';
 import app from './app.ts';
 import pool from './config/database.ts';
 import { ENV } from './config/env.ts';
@@ -21,15 +22,15 @@ async function bootstrap() {
     });
   } catch (error) {
     console.error('❌ BOOTSTRAP ERROR:', error);
-    // Fix: Using imported process to ensure 'exit' exists on type
+    // Fix: access exit() from the correctly typed node:process module
     process.exit(1);
   }
 }
 
-// Fix: Using imported process to ensure 'on' exists on type
+// Fix: access on() from the correctly typed node:process module
 process.on('unhandledRejection', (err: Error) => {
   console.error('🔥 CRITICAL: Unhandled Promise Rejection ->', err.message);
-  // Fix: Using imported process to ensure 'exit' exists on type
+  // Fix: access exit() from the correctly typed node:process module
   process.exit(1);
 });
 

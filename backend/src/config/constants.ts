@@ -1,10 +1,10 @@
 import path from 'path';
-// Fix: Added process import to resolve "Property 'cwd' does not exist on type 'Process'" error
-import process from 'process';
+// Fix: Use node:process to resolve "Property 'cwd' does not exist on type 'Process'" error by ensuring Node.js specific types
+import process from 'node:process';
 
 export const CONSTANTS = {
   UPLOADS: {
-    // Fix: Using imported process to ensure 'cwd' exists on type
+    // Fix: access cwd() from the correctly typed node:process module to identify current directory in Node.js
     ROOT: path.join(process.cwd(), 'src', 'uploads'),
     COURSES: 'courses',
     GALLERY: 'gallery',
