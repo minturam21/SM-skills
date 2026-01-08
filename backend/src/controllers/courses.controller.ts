@@ -14,7 +14,8 @@ export class CoursesController {
 
   static async getCourseById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
+      // Fix: Cast req to any to access params as the current Request type definition in this environment lacks it
+      const { id } = (req as any).params;
       const data = await CoursesService.fetchCourseDetails(id);
       return sendResponse(res, 200, true, 'Course details retrieved', data);
     } catch (error) {
