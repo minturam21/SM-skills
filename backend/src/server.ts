@@ -1,36 +1,29 @@
-import app from './app';
-import pool from './config/db';
-import dotenv from 'dotenv';
+
+import app from './app.ts';
+import pool from './config/database.ts';
+import { ENV } from './config/env.ts';
 import process from 'process';
 
-dotenv.config();
-
-const PORT = process.env.PORT || 5000;
-
-async function startServer() {
+async function bootstrap() {
   try {
-    // Verify Database Connection Pool
+    // Validate Database Connection
     const connection = await pool.getConnection();
-    console.log('📦 MySQL Database connection pool initialized.');
+    console.log('✅ Database Connection Verified.');
     connection.release();
 
-    // Start HTTP Listener
-    app.listen(PORT, () => {
-      console.log(`🚀 API Server running in [${process.env.NODE_ENV}] mode`);
-      console.log(`📡 Endpoint: http://localhost:${PORT}/api`);
+    app.listen(ENV.PORT, () => {
+      console.log(`🚀 SMS Backend listening on port ${ENV.PORT}`);
+      console.log(`📡 API URL: http://localhost:${ENV.PORT}/api`);
     });
-
   } catch (error) {
-    console.error('💥 Failed to start server:', error);
+    console.error('❌ Bootstrap Failure:', error);
     process.exit(1);
   }
 }
 
-// Handle unexpected process crashes
 process.on('unhandledRejection', (err: Error) => {
-  console.error('UNHANDLED REJECTION! 💥 Shutting down server...');
-  console.error(err.name, err.message);
+  console.error('🔥 Unhandled Rejection:', err.message);
   process.exit(1);
 });
 
-startServer();
+bootstrap();

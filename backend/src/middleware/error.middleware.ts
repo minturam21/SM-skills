@@ -1,28 +1,19 @@
+
 import { Request, Response, NextFunction } from 'express';
+import { ENV } from '../config/env.ts';
+import { sendResponse } from '../utils/response.ts';
 
-export interface AppError extends Error {
-  statusCode?: number;
-}
-
-export const errorHandler = (
-  err: AppError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal Server Error';
 
-  console.error(`[Backend Error] ${statusCode} - ${message}`);
+  console.error(`[API Error] ${statusCode} - ${message}`);
   
-  if (process.env.NODE_ENV === 'development') {
+  if (ENV.NODE_ENV === 'development') {
     console.error(err.stack);
   }
 
-  res.status(statusCode).json({
-    status: 'error',
-    statusCode,
-    message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-  });
+  return sendResponse(res, statusCode, false, message, 
+    ENV.NODE_ENV === 'development' ? { stack: err.stack } : null
+  );
 };

@@ -1,37 +1,32 @@
+
 import express, { Application } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import process from 'process';
-import apiRoutes from './routes';
-import { errorHandler } from './middleware/error.middleware';
+import apiRoutes from './routes/index.ts';
+import { errorHandler } from './middleware/error.middleware.ts';
+import { ENV } from './config/env.ts';
 
 const app: Application = express();
 
-// 1. Security Middlewares
-app.use(helmet({
-  crossOriginResourcePolicy: false, // Allows frontend to access images in /uploads
-}));
+// Security & Utility Middleware
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors());
+if (ENV.NODE_ENV === 'development') app.use(morgan('dev'));
 
-// 2. Logging (Only in dev)
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+// Parsing
+app.use(express.json({ limit: ENV.UPLOAD_LIMIT }));
+app.use(express.urlencoded({ extended: true, limit: ENV.UPLOAD_LIMIT }));
 
-// 3. Request Parsing
-app.use(express.json({ limit: process.env.UPLOAD_LIMIT || '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: process.env.UPLOAD_LIMIT || '10mb' }));
-
-// 4. Static File Hosting (Uploads)
-// Path relative to the root of the backend folder
+// Static Assets
 app.use('/uploads', express.static(path.join(process.cwd(), 'src', 'uploads')));
 
-// 5. API Route Registration
+// API Entry Point
 app.use('/api', apiRoutes);
 
-// 6. Global Error Handler (Must be last)
+// Catch-all Error Handling
 app.use(errorHandler);
 
 export default app;

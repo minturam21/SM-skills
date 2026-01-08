@@ -1,23 +1,20 @@
 
 import { Router } from 'express';
+import courseRoutes from './courses.routes.ts';
 import process from 'process';
 
 const router = Router();
 
-/**
- * Health Check Endpoint
- * Verifies API availability
- */
+// Health Check
 router.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
+  res.status(200).json({ status: 'ok', uptime: process.uptime() });
 });
 
-// Future modular routes will be registered here:
-// router.use('/courses', courseRoutes);
+// Module Routes
+router.use('/courses', courseRoutes);
+
+// Other routes will be attached here
 // router.use('/admin', adminRoutes);
+// router.use('/forms', formsRoutes);
 
 export default router;
