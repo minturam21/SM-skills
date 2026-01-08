@@ -46,10 +46,6 @@ const App: React.FC = () => {
         return result;
       };
 
-      /**
-       * Fixed: Added : any return type to avoid union type mismatch errors when assigning to specific AppState properties.
-       * Also used (INITIAL_CONTENT as any)[key] to safely access default content.
-       */
       const migrateList = (key: string, defaultMeta: any): any => {
         const val = parsed[key];
         if (Array.isArray(val)) {
@@ -82,7 +78,6 @@ const App: React.FC = () => {
         placements: deepMerge(INITIAL_CONTENT.placements, parsed.placements),
         legal: deepMerge(INITIAL_CONTENT.legal, parsed.legal),
         career: deepMerge(INITIAL_CONTENT.career, parsed.career),
-        // Applying migrations
         courses: migrateList('courses', INITIAL_CONTENT.courses.pageMeta),
         notices: migrateList('notices', INITIAL_CONTENT.notices.pageMeta),
         gallery: migrateList('gallery', INITIAL_CONTENT.gallery.pageMeta),

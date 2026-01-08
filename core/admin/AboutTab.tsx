@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AppState, TeamMember, AchievementStat, ExtraChapter } from '../types.ts';
 
@@ -37,6 +36,16 @@ const AboutTab: React.FC<AboutTabProps> = ({
   updateExtraChapter,
   removeExtraChapter
 }) => {
+  // Defensive check for data and destructuring with robust defaults to prevent rendering crashes
+  const {
+    beginning = { label: '', title: '', story: '', image: '' },
+    learning = { label: '', title: '', description: '', image1: '', image2: '', caption1: '', caption2: '' },
+    faculty = { label: '', title: '', description: '', members: [] },
+    vision = { label: '', title: '', content: '', values: [], image: '' },
+    achievements = { label: '', title: '', image: '', stats: [], ctaLabel: '' },
+    extraChapters = []
+  } = data || {};
+
   return (
     <div className="space-y-16 animate-fade-in pb-20">
       <div className="flex items-center gap-6 mb-8">
@@ -51,14 +60,14 @@ const AboutTab: React.FC<AboutTabProps> = ({
            <div className="lg:col-span-1 space-y-4">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Visual Story</label>
               <div onClick={() => triggerUpload('about.beginning.image')} className="aspect-video rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center cursor-pointer overflow-hidden group relative">
-                 {data.beginning.image ? <img src={data.beginning.image} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" /> : <i className="fa-solid fa-image text-3xl text-slate-700"></i>}
+                 {beginning.image ? <img src={beginning.image} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity" alt="Genesis" /> : <i className="fa-solid fa-image text-3xl text-slate-700"></i>}
                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 font-black text-[10px] text-white uppercase">Upload Wide Scene</div>
               </div>
            </div>
            <div className="lg:col-span-2 space-y-4">
-              <input value={data.beginning.label} onChange={e => updateChapter('beginning', 'label', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-[10px] text-emerald-500 font-black uppercase tracking-widest" placeholder="Section Tag" />
-              <input value={data.beginning.title} onChange={e => updateChapter('beginning', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" placeholder="Chapter Title" />
-              <textarea value={data.beginning.story} onChange={e => updateChapter('beginning', 'story', e.target.value)} rows={4} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300 resize-none" placeholder="The founding narrative..." />
+              <input value={beginning.label} onChange={e => updateChapter('beginning', 'label', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-[10px] text-emerald-500 font-black uppercase tracking-widest" placeholder="Section Tag" />
+              <input value={beginning.title} onChange={e => updateChapter('beginning', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" placeholder="Chapter Title" />
+              <textarea value={beginning.story} onChange={e => updateChapter('beginning', 'story', e.target.value)} rows={4} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300 resize-none" placeholder="The founding narrative..." />
            </div>
         </div>
       </div>
@@ -67,24 +76,24 @@ const AboutTab: React.FC<AboutTabProps> = ({
       <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
         <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3"><i className="fa-solid fa-2"></i> CHAPTER: METHODOLOGY</h3>
         <div className="space-y-4">
-           <input value={data.learning.label} onChange={e => updateChapter('learning', 'label', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-[10px] text-emerald-500 font-black uppercase tracking-widest" />
-           <input value={data.learning.title} onChange={e => updateChapter('learning', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" />
-           <textarea value={data.learning.description} onChange={e => updateChapter('learning', 'description', e.target.value)} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300 resize-none" />
+           <input value={learning.label} onChange={e => updateChapter('learning', 'label', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-[10px] text-emerald-500 font-black uppercase tracking-widest" />
+           <input value={learning.title} onChange={e => updateChapter('learning', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" />
+           <textarea value={learning.description} onChange={e => updateChapter('learning', 'description', e.target.value)} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300 resize-none" />
         </div>
         <div className="grid grid-cols-2 gap-6">
            <div className="space-y-2">
              <div onClick={() => triggerUpload('about.learning.image1')} className="h-40 rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center cursor-pointer overflow-hidden group relative">
-                {data.learning.image1 ? <img src={data.learning.image1} className="w-full h-full object-cover" /> : <i className="fa-solid fa-plus"></i>}
+                {learning.image1 ? <img src={learning.image1} className="w-full h-full object-cover" alt="Action 1" /> : <i className="fa-solid fa-plus"></i>}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[8px] font-black text-white uppercase">Action Photo 1</div>
              </div>
-             <input value={data.learning.caption1} onChange={e => updateChapter('learning', 'caption1', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-[10px] text-slate-400" placeholder="Caption 1" />
+             <input value={learning.caption1} onChange={e => updateChapter('learning', 'caption1', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-[10px] text-slate-400" placeholder="Caption 1" />
            </div>
            <div className="space-y-2">
              <div onClick={() => triggerUpload('about.learning.image2')} className="h-40 rounded-2xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center cursor-pointer overflow-hidden group relative">
-                {data.learning.image2 ? <img src={data.learning.image2} className="w-full h-full object-cover" /> : <i className="fa-solid fa-plus"></i>}
+                {learning.image2 ? <img src={learning.image2} className="w-full h-full object-cover" alt="Action 2" /> : <i className="fa-solid fa-plus"></i>}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[8px] font-black text-white uppercase">Action Photo 2</div>
              </div>
-             <input value={data.learning.caption2} onChange={e => updateChapter('learning', 'caption2', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-[10px] text-slate-400" placeholder="Caption 2" />
+             <input value={learning.caption2} onChange={e => updateChapter('learning', 'caption2', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-[10px] text-slate-400" placeholder="Caption 2" />
            </div>
         </div>
       </div>
@@ -93,15 +102,15 @@ const AboutTab: React.FC<AboutTabProps> = ({
       <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
         <div className="flex justify-between items-center">
            <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3"><i className="fa-solid fa-3"></i> CHAPTER: THE MENTORS</h3>
-           <button onClick={addTeamMember} className="bg-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">ADD FACULTY</button>
+           <button onClick={addTeamMember} className="bg-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">ADD FACULTY</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           {data.faculty.members.map(member => (
+           {(faculty.members || []).map(member => (
               <div key={member.id} className="bg-slate-800 p-6 rounded-3xl border border-slate-700 relative group">
                  <button onClick={() => removeTeamMember(member.id)} className="absolute -top-2 -right-2 w-8 h-8 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center shadow-xl"><i className="fa-solid fa-trash-can text-[10px]"></i></button>
                  <div className="flex gap-4">
                     <div onClick={() => triggerUpload(`about.faculty.members.${member.id}`)} className="w-20 h-20 rounded-xl bg-slate-900 border border-slate-700 overflow-hidden cursor-pointer shrink-0 relative group/p">
-                       <img src={member.image} className="w-full h-full object-cover" />
+                       <img src={member.image} className="w-full h-full object-cover" alt={member.name} />
                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/p:opacity-100 flex items-center justify-center text-[6px] font-black text-white uppercase text-center">Update Portrait</div>
                     </div>
                     <div className="flex-grow space-y-2">
@@ -120,8 +129,8 @@ const AboutTab: React.FC<AboutTabProps> = ({
         <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3"><i className="fa-solid fa-4"></i> CHAPTER: VISION & VALUES</h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
            <div className="space-y-4">
-              <input value={data.vision.title} onChange={e => updateChapter('vision', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" />
-              <textarea value={data.vision.content} onChange={e => updateChapter('vision', 'content', e.target.value)} rows={4} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300 resize-none" />
+              <input value={vision.title} onChange={e => updateChapter('vision', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" />
+              <textarea value={vision.content} onChange={e => updateChapter('vision', 'content', e.target.value)} rows={4} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-300 resize-none" />
            </div>
            <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -129,10 +138,10 @@ const AboutTab: React.FC<AboutTabProps> = ({
                  <button onClick={addValue} className="text-xs text-emerald-500 font-black">+ ADD VALUE</button>
               </div>
               <div className="space-y-2">
-                 {data.vision.values.map((v, idx) => (
+                 {(vision.values || []).map((v, idx) => (
                     <div key={idx} className="flex gap-2">
                        <input value={v} onChange={e => updateValues(idx, e.target.value)} className="flex-grow bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white" />
-                       <button onClick={() => removeValue(idx)} className="text-red-500 p-2"><i className="fa-solid fa-xmark"></i></button>
+                       <button onClick={() => removeValue(idx)} className="text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition-colors"><i className="fa-solid fa-xmark"></i></button>
                     </div>
                  ))}
               </div>
@@ -144,19 +153,19 @@ const AboutTab: React.FC<AboutTabProps> = ({
       <div className="space-y-8 bg-slate-900/30 p-8 rounded-[2.5rem] border border-slate-700">
         <div className="flex justify-between items-center">
            <h3 className="text-emerald-500 font-black text-lg flex items-center gap-3"><i className="fa-solid fa-5"></i> CHAPTER: ACHIEVEMENTS</h3>
-           <button onClick={addStat} className="bg-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">ADD STAT</button>
+           <button onClick={addStat} className="bg-emerald-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">ADD STAT</button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
            <div className="space-y-6">
-              <input value={data.achievements.title} onChange={e => updateChapter('achievements', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" />
+              <input value={achievements.title} onChange={e => updateChapter('achievements', 'title', e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-white font-bold" />
               <div onClick={() => triggerUpload('about.achievements.image')} className="aspect-video rounded-3xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center cursor-pointer overflow-hidden group relative">
-                 {data.achievements.image ? <img src={data.achievements.image} className="w-full h-full object-cover" /> : <i className="fa-solid fa-image"></i>}
+                 {achievements.image ? <img src={achievements.image} className="w-full h-full object-cover" alt="Proof" /> : <i className="fa-solid fa-image"></i>}
                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center font-black text-[10px] text-white uppercase">Upload Image</div>
               </div>
            </div>
            <div className="space-y-4">
               <div className="space-y-4">
-                 {(data.achievements.stats || []).map((stat) => (
+                 {(achievements.stats || []).map((stat) => (
                     <div key={stat.id} className="grid grid-cols-12 gap-4 p-4 bg-slate-800 rounded-2xl border border-slate-700 group/stat relative">
                        <button onClick={() => removeStat(stat.id)} className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full opacity-0 group-hover/stat:opacity-100 transition-all flex items-center justify-center shadow-xl z-10"><i className="fa-solid fa-xmark text-[10px]"></i></button>
                        <div className="col-span-4">
@@ -192,7 +201,7 @@ const AboutTab: React.FC<AboutTabProps> = ({
         </div>
 
         <div className="space-y-10">
-          {(data.extraChapters || []).map((ch, idx) => (
+          {(extraChapters || []).map((ch) => (
             <div key={ch.id} className="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 hover:border-emerald-500/30 transition-all group relative">
               <button 
                 onClick={() => removeExtraChapter(ch.id)} 
@@ -207,7 +216,7 @@ const AboutTab: React.FC<AboutTabProps> = ({
                     onClick={() => triggerUpload(`about.extraChapters.${ch.id}`)}
                     className="aspect-square bg-slate-900 rounded-2xl overflow-hidden cursor-pointer group/img border border-slate-700 relative"
                   >
-                    {ch.image ? <img src={ch.image} className="w-full h-full object-cover group-hover/img:opacity-40" /> : <div className="w-full h-full flex items-center justify-center text-slate-700 text-3xl"><i className="fa-solid fa-image"></i></div>}
+                    {ch.image ? <img src={ch.image} className="w-full h-full object-cover group-hover/img:opacity-40" alt="Chapter" /> : <div className="w-full h-full flex items-center justify-center text-slate-700 text-3xl"><i className="fa-solid fa-image"></i></div>}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/img:opacity-100 bg-black/40 text-white font-black text-[10px] uppercase">Upload Feature Image</div>
                   </div>
                 </div>
