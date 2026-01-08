@@ -1,9 +1,10 @@
 import path from 'path';
-// Removed redundant process import to ensure use of correctly-typed global process
+// Fix: Added process import to resolve "Property 'cwd' does not exist on type 'Process'" error
+import process from 'process';
 
 export const CONSTANTS = {
   UPLOADS: {
-    // Using global process.cwd() for robust absolute path generation to fix "Property 'cwd' does not exist" error
+    // Fix: Using imported process to ensure 'cwd' exists on type
     ROOT: path.join(process.cwd(), 'src', 'uploads'),
     COURSES: 'courses',
     GALLERY: 'gallery',

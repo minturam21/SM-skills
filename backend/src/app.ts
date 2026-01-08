@@ -9,22 +9,22 @@ import { CONSTANTS } from './config/constants.ts';
 
 const app: Application = express();
 
-// 1. Security & Logging
+// 1. Core Security & Logging
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors());
 if (ENV.NODE_ENV === 'development') app.use(morgan('dev'));
 
-// 2. Parsing
+// 2. Request Parsing
 app.use(express.json({ limit: ENV.UPLOAD_LIMIT }));
 app.use(express.urlencoded({ extended: true, limit: ENV.UPLOAD_LIMIT }));
 
-// 3. Static File Serving (Mapped from Constants)
+// 3. Static File Access
 app.use('/uploads', express.static(CONSTANTS.UPLOADS.ROOT));
 
-// 4. Global API Routing
+// 4. API Core Routing (Routes are aggregated in routes/index.ts)
 app.use('/api', apiRoutes);
 
-// 5. Central Error Handling (Catch-all)
+// 5. Global Error Handler (MUST be last)
 app.use(errorHandler);
 
 export default app;

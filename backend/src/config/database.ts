@@ -2,8 +2,8 @@ import mysql from 'mysql2/promise';
 import { ENV } from './env.ts';
 
 /**
- * Consolidated Database Connection Pool
- * All data access layers must consume this single instance.
+ * MASTER DATABASE CONNECTION POOL
+ * This is the ONLY file authorized to configure MySQL access.
  */
 const pool = mysql.createPool({
   host: ENV.DB.HOST,
@@ -18,4 +18,5 @@ const pool = mysql.createPool({
   keepAliveInitialDelay: 0
 });
 
+// Verification handled in server.ts
 export default pool;

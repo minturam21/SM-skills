@@ -1,29 +1,27 @@
 import { Router } from 'express';
-// Use global process instead of explicit import to avoid type conflicts with NodeJS.Process
 import courseRoutes from './courses.routes.ts';
 
 const router = Router();
 
 /**
- * API Root / Health Check
+ * Institutional Backend Health Gateway
  */
 router.get('/health', (req, res) => {
   res.status(200).json({ 
-    status: 'ok', 
+    status: 'online', 
     timestamp: new Date().toISOString(),
-    // Accessing uptime from the global process object to fix "Property 'uptime' does not exist" error
-    uptime: process.uptime()
+    version: '1.0.0'
   });
 });
 
 /**
- * Module Route Registration
+ * Feature Module Registration
  */
 router.use('/courses', courseRoutes);
 
-// Modular placeholders for upcoming logic:
+// Stubs for forthcoming modules:
 // router.use('/admin', adminRoutes);
-// router.use('/forms', formRoutes);
+// router.use('/forms', formsRoutes);
 // router.use('/site', siteRoutes);
 
 export default router;
