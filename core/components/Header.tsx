@@ -9,7 +9,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ config }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('sms_auth_token'));
   const location = useLocation();
   const navigate = useNavigate();
   const logoUrl = config.logo || "https://lwfiles.mycourse.app/62a6cd5-public/6efdd5e.png";
@@ -19,15 +19,22 @@ const Header: React.FC<HeaderProps> = ({ config }) => {
       setIsLoggedIn(!!localStorage.getItem('sms_auth_token'));
     };
 
-    checkAuth();
+    // Listen for cross-component auth changes
     window.addEventListener('authChange', checkAuth);
-    return () => window.removeEventListener('authChange', checkAuth);
+    // Listen for storage changes (e.g., logout in another tab)
+    window.addEventListener('storage', checkAuth);
+    
+    return () => {
+      window.removeEventListener('authChange', checkAuth);
+      window.removeEventListener('storage', checkAuth);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('sms_auth_token');
     localStorage.removeItem('sms_auth_user');
     setIsLoggedIn(false);
+    window.dispatchEvent(new Event('authChange'));
     navigate('/');
   };
 

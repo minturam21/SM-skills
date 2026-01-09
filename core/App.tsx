@@ -28,6 +28,8 @@ import LoginPage from './pages/LoginPage.tsx';
 
 const App: React.FC = () => {
   const [isInitializing, setIsInitializing] = useState(true);
+  const [isAuth, setIsAuth] = useState(() => !!localStorage.getItem('sms_auth_token'));
+  
   const [content, setContent] = useState<AppState>(() => {
     const saved = localStorage.getItem('edu_insta_content');
     if (!saved) return INITIAL_CONTENT;
@@ -123,8 +125,14 @@ const App: React.FC = () => {
   }, [content.theme]);
 
   useEffect(() => {
+    const checkAuth = () => setIsAuth(!!localStorage.getItem('sms_auth_token'));
+    window.addEventListener('authChange', checkAuth);
+    
     const timer = setTimeout(() => setIsInitializing(false), 800);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('authChange', checkAuth);
+    };
   }, []);
 
   const updateContent = (newContent: AppState) => {
@@ -134,10 +142,6 @@ const App: React.FC = () => {
     } catch (err) {
       console.error("Educational CMS: Failed to save", err);
     }
-  };
-
-  const isAuthenticated = () => {
-    return !!localStorage.getItem('sms_auth_token');
   };
 
   return (
@@ -157,10 +161,10 @@ const App: React.FC = () => {
               <Route path="/faq" element={<FAQPage faqsState={content.faqs} contact={content.site.contact} />} />
               <Route path="/contact" element={<ContactPage config={content.site.contact} social={content.site.social} content={content} />} />
               
-              {/* Protected Admin Route */}
+              {/* Protected Admin Route relying on reactive state */}
               <Route 
                 path="/admin" 
-                element={isAuthenticated() ? <AdminDashboard content={content} onUpdate={updateContent} /> : <Navigate to="/login" />} 
+                element={isAuth ? <AdminDashboard content={content} onUpdate={updateContent} /> : <Navigate to="/login" replace />} 
               />
               
               <Route path="/enroll" element={<EnrollmentPage content={content} />} />
