@@ -15,7 +15,6 @@ export class AuthController {
       
       return sendResponse(res, 200, true, 'Login successful', authData);
     } catch (error) {
-      // Passes errors (like 404 User not found or 401 Incorrect password) to the error middleware
       next(error);
     }
   }

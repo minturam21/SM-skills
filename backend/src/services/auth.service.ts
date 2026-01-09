@@ -23,7 +23,6 @@ export class AuthService {
     }
 
     // 3. Cryptographic Verification
-    // Ensure parameters are (plainText, hash)
     const isMatch = await bcrypt.compare(plainPassword, user.password);
     if (!isMatch) {
       const err: any = new Error('Incorrect password');
@@ -38,7 +37,7 @@ export class AuthService {
       { expiresIn: '8h' }
     );
 
-    // 5. Data Sanitization
+    // 5. Success Response
     return {
       token,
       user: {
